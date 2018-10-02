@@ -1,0 +1,26 @@
+  <div class="container">
+    <div class="d-flex">
+      <label for="txtEntrada">Informe aqui o código a ser avaliado</label>
+      <input type="text" class="form-control mr-1" id="txtEntrada" placeholder="Informe o código" [formControl]="textValue">    
+      <button (click)="verifyButton()" class="btn btn-primary">Teste</button>
+    </div>
+  </div>
+
+<h3>Resultados</h3>
+<hr />
+<table class="table">
+  <tr>
+    <td>Descrição</td>
+    <td>Padrão</td>
+    <td>Tamanho</td>
+    <td>Resultado</td>
+    <td>IsMatch</td>
+  </tr>
+  <tr *ngFor="let function of functions">
+    <td>{{function.description}}</td>
+    <td>{{function.pattern}}</td>
+    <td>{{function.size}}</td>
+    <td>{{function.result}}</td>
+    <td>{{function.isMatch}}</td>
+  </tr>
+</table>
