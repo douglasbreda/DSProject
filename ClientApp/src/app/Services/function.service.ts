@@ -11,7 +11,8 @@ export class FunctionService {
 
     //get
   getFunctions(value: string)  {
-    return this.http.get(`api/Function/{value}`);
+    console.log(value);
+    return this.http.get('api/Function/' + value);
     
     }
 }

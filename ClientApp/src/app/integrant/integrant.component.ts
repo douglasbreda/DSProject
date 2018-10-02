@@ -22,6 +22,7 @@ export class IntegrantComponent {
 
     const uploadReq = new HttpRequest('POST', `api/upload`, formData, {
       reportProgress: true,
+
     });
 
     this.http.request(uploadReq).subscribe(event => {
@@ -29,6 +30,8 @@ export class IntegrantComponent {
         this.progress = Math.round(100 * event.loaded / event.total);
       else if (event.type == HttpEventType.Response)
         this.message = event.body.toString();
+        else
+          this.message = "Aguarde enquanto cadastramos os integrantes :)"
     });
   }
 }

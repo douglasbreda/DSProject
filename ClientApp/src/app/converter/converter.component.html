@@ -1,10 +1,15 @@
-  <div class="container">
-    <div class="d-flex">
-      <label for="txtEntrada">Informe aqui o código a ser avaliado</label>
-      <input type="text" class="form-control mr-1" id="txtEntrada" placeholder="Informe o código" [formControl]="textValue">    
-      <button (click)="verifyButton()" class="btn btn-primary">Teste</button>
-    </div>
-  </div>
+<div class="row">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Informe aqui o código a ser avaliado...." [formControl]="textValue">
+        <span class="input-group-btn">
+          <button (click)="verifyButton()" class="btn btn-default" type="button">Go!</button>
+        </span>
+      </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+  </div><!-- /.row -->
+</div>
 
 <h3>Resultados</h3>
 <hr />

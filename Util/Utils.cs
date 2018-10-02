@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace DSProject.Util
 {
@@ -100,6 +101,14 @@ namespace DSProject.Util
                 _array = new string[] { value };
 
             return _array;
+        }
+
+        /// <summary>
+        /// Extrai somente os números de uma string
+        /// </summary>
+        public static string GetOnlyNumbers(string value)
+        {
+            return new String(value.Where(Char.IsDigit).ToArray());
         }
     }
 }

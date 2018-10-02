@@ -20,17 +20,18 @@ export class ConverterComponent implements OnInit {
    * Retorna todas as funções que foram realizadas pela API
    */
   private getFunctions() {
-    this.functionService.getFunctions(this.textValue.value).subscribe((data: Array<IFunction>) => {
+    this.functionService.getFunctions(this.textValue.value.toString()).subscribe((data: Array<IFunction>) => {
       this.functions = data;
       console.log(data);
     });
   }
 
   ngOnInit(): void {
-    this.getFunctions();
+    
   }
 
   verifyButton(){
+    this.getFunctions();
     console.log("O valor do botão é " + this.textValue.value)
   }
 }
