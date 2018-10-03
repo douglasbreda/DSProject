@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DSProject.Interface;
 using DSProject.Model;
@@ -85,6 +87,7 @@ namespace DSProject.Controllers
             OnlyCharacter();
             Cpf();
             Cnpj();
+            DataCheck();
 
             return _lstFunctions;
         }
@@ -165,6 +168,38 @@ namespace DSProject.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private void DataCheck()
+        {
+            _value = Utils.GetOnlyNumbers(_value);
+
+            if (_value.Length < 8 || _value.Length > 8)
+                AddList("Data", $"Número com {_value.Length} dígitos. Uma data contém 8 dígitos.", false, Utils.GetMask(eMaskType.data));
+            else
+            {
+                int year = _value.Substring(4, 4).ToInt32();
+                int month = _value.Substring(2, 2).ToInt32();
+                int day = _value.Substring(0, 2).ToInt32();
+
+                try
+                {
+                    DateTime dt = new DateTime(year, month, day);
+
+                    if (dt != new DateTime())
+                    {
+                        CultureInfo cult = new CultureInfo("pt-BR");
+                        string dtFormated = dt.ToString("dd/MM/yyyy", cult);
+                        AddList("Data", $"Pode ser que o valor seja uma data: {dtFormated}", true, Utils.GetMask(eMaskType.data), 8);
+                    }
+                }
+                catch
+                {
+                    AddList("Data", $"Não é uma data válida", false, Utils.GetMask(eMaskType.data), 8);
+                }
+            }
+        }
 
         #endregion
     }
