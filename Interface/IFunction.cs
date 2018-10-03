@@ -14,6 +14,8 @@
 
         bool IsMatch { get; set; }
 
+        string Link { get; set; }
+
         #endregion
     }
 }
