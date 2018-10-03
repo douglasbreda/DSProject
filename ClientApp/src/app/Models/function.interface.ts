@@ -4,4 +4,5 @@ export interface IFunction {
   size: number;
   result: object;
   isMatch: boolean;
+  link : string;
 }
