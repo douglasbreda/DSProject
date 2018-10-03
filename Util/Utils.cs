@@ -144,6 +144,8 @@ namespace DSProject.Util
                     return "00.000.000/0000-00";
                 case eMaskType.cep:
                     return "00000-000";
+                case eMaskType.data:
+                    return "00/00/0000";
             }
 
             return "";

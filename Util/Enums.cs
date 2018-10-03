@@ -12,7 +12,8 @@ namespace DSProject.Util
         {
             cpf = 0,
             cnpj = 1,
-            cep = 2
+            cep = 2, 
+            data = 3
         }
     }
 }
