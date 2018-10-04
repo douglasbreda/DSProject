@@ -88,6 +88,8 @@ namespace DSProject.Controllers
             Cpf();
             Cnpj();
             DataCheck();
+            Phone();
+            CellPhone();
 
             return _lstFunctions;
         }
@@ -106,7 +108,7 @@ namespace DSProject.Controllers
             {
                 Description = description,
                 Result = result,
-                IsMatch = true,
+                IsMatch = isMatch,
                 Pattern = pattern,
                 Size = size,
                 Link = link
@@ -200,6 +202,58 @@ namespace DSProject.Controllers
                 }
             }
         }
+
+        /// <summary>
+        /// Validação para telefones
+        /// </summary>
+        private void Phone()
+        {
+            string phone = Utils.GetOnlyNumbers(_value);
+
+            if (phone.Length == 8)
+            {
+                string formatedPhone = phone.Insert(4, "-");
+                AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 8);
+            }
+            else if (phone.Length == 10)
+            {
+                string formatedPhone = Utils.PutPhoneMask(phone, eMaskType.phoneWithDDD);
+                AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 10);
+            }
+            else if (phone.Length < 8)
+            {
+                AddList("Telefone", $"Não é uma número de telefone válido pois contém menos de 8 números", false, "", 0);
+            }
+            else if (phone.Length > 10)
+                AddList("Telefone", $"Não é uma número de telefone válido pois contém mais de 10 números", false, "", 0);
+
+        }
+
+        /// <summary>
+        /// Validação para números de telefone
+        /// </summary>
+        private void CellPhone()
+        {
+            string cellPhone = Utils.GetOnlyNumbers(_value);
+
+            if (cellPhone.Length == 9)
+            {
+                string formatedPhone = cellPhone.Insert(5, "-");
+                AddList("Celular", $"Pode ser que o valor seja um número de celular {formatedPhone}", true, Utils.GetMask(eMaskType.cellPhoneWithoutDDD), 9);
+            }
+            else if (cellPhone.Length == 11)
+            {
+                string formatedPhone = Utils.PutPhoneMask(cellPhone, eMaskType.cellPhoneWithDDD);
+                AddList("Celular", $"Pode ser que o valor seja um número de celular {formatedPhone}", true, Utils.GetMask(eMaskType.cellPhoneWithoutDDD), 11);
+            }
+            else if (cellPhone.Length < 9)
+            {
+                AddList("Celular", $"Não é uma número de celular válido pois contém menos de 9 números", false, "", 0);
+            }
+            else if (cellPhone.Length > 11)
+                AddList("Celular", $"Não é uma número de celular válido pois contém mais de 11 números", false, "", 0);
+        }
+
 
         #endregion
     }

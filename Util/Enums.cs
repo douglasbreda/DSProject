@@ -13,7 +13,11 @@ namespace DSProject.Util
             cpf = 0,
             cnpj = 1,
             cep = 2, 
-            data = 3
+            data = 3, 
+            phoneWithoutDDD = 4, 
+            phoneWithDDD = 6,
+            cellPhoneWithoutDDD = 7,
+            cellPhoneWithDDD = 8
         }
     }
 }
