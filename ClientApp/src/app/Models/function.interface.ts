@@ -5,4 +5,5 @@ export interface IFunction {
   result: object;
   isMatch: boolean;
   link : string;
+  html : string;
 }

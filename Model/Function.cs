@@ -10,5 +10,6 @@ namespace DSProject.Model
         public object Result { get; set; } = "";
         public bool IsMatch { get; set; } = false;
         public string Link { get; set; }
+        public string Html { get; set; }
     }
 }
