@@ -6,6 +6,7 @@ import { FormBuilder, FormControl } from '@angular/forms';
 @Component({
   selector: 'app-converter',
   templateUrl: './converter.component.html',
+  styleUrls: ['./converter.component.css'],
 })
 export class ConverterComponent implements OnInit {
 
@@ -13,7 +14,7 @@ export class ConverterComponent implements OnInit {
   textValue = new FormControl('');
 
   constructor(private functionService: FunctionService) {
-    
+
   }
 
   /*
@@ -27,11 +28,19 @@ export class ConverterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
-  verifyButton(){
+  verifyButton() {
     this.getFunctions();
     console.log("O valor do botão é " + this.textValue.value)
+  }
+
+  ///Modifica as tags que vem com o caracter de escape do C#
+  replaceHtml(value: string) {
+    let s : string;
+    s = value.replace("\\", "");
+    console.log(s);
+    return 
   }
 }

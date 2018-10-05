@@ -57,6 +57,40 @@ namespace DSProject.Util
             }
         }
 
+        /// <summary>
+        /// Coloca a máscara nos campos de telefone e celular
+        /// </summary>
+        public static string PutPhoneMask(string phone, eMaskType phoneMask)
+        {
+            string _phoneWithMask = string.Empty;
+            try
+            {
+                switch (phoneMask)
+                {
+                    case eMaskType.phoneWithDDD:
+                        _phoneWithMask = Convert.ToUInt64(phone).ToString(@"\(00\) 0000\-0000");
+                        break;
+                    case eMaskType.phoneWithoutDDD:
+                        _phoneWithMask = Convert.ToUInt64(phone).ToString(@"0000\-0000");
+                        break;
+                    case eMaskType.cellPhoneWithDDD:
+                        _phoneWithMask = Convert.ToUInt64(phone).ToString(@"\(00\) 00000\-0000");
+                        break;
+                    case eMaskType.cellPhoneWithoutDDD:
+                        _phoneWithMask = Convert.ToUInt64(phone).ToString(@"00000\-0000");
+                        break;
+                }
+
+                return _phoneWithMask;
+            }
+            catch
+            {
+                _phoneWithMask = "";
+            }
+
+            return _phoneWithMask;
+        }
+
         //Remove a máscara 
         public static string RemoveMask(string value)
         {
@@ -146,6 +180,15 @@ namespace DSProject.Util
                     return "00000-000";
                 case eMaskType.data:
                     return "00/00/0000";
+                case eMaskType.phoneWithDDD:
+                    return "(00) 0000-0000";
+                case eMaskType.phoneWithoutDDD:
+                    return "0000-0000";
+                case eMaskType.cellPhoneWithDDD:
+                    return "(00) 00000-0000";
+                case eMaskType.cellPhoneWithoutDDD:
+                    return "00000-0000";
+
             }
 
             return "";

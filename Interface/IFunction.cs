@@ -16,6 +16,8 @@
 
         string Link { get; set; }
 
+        string Html { get; set; }
+
         #endregion
     }
 }

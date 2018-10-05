@@ -21,6 +21,7 @@
     <td>Resultado</td>
     <td>Link</td>
     <td>IsMatch</td>
+    <td>Extra</td>
   </tr>
   <tr *ngFor="let function of functions">
     <td>{{function.description}}</td>
@@ -32,5 +33,9 @@
       <td> - </td>
     </ng-template>
     <td>{{function.isMatch}}</td>
+    <td *ngIf="!function.html; else htmlCode"> - </td>
+    <ng-template #htmlCode>
+      <td><span [innerHTML]="function.html"></span></td>
+    </ng-template>
   </tr>
 </table>
