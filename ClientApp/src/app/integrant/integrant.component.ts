@@ -1,15 +1,22 @@
+import { IntegrantService } from './../Services/integrant.service';
+import { IIntegrant } from './../Models/integrant.interface';
 import { HttpClient, HttpRequest, HttpEventType } from '@angular/common/http';
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-integrant-component',
-  templateUrl: './integrant.component.html'
+  templateUrl: './integrant.component.html',
+  styleUrls: ['./integrant.component.css']
 })
 export class IntegrantComponent {
 
   public progress: number;
   public message: string;
-  constructor(private http: HttpClient) { }
+  integrants: IIntegrant[] = [];
+  displayedColumns: string[] = ['id', 'registrationDate', 'name',
+    'datOfBirth', 'cellPhone', 'email']
+
+  constructor(private http: HttpClient, private integrantService: IntegrantService) { }
 
   upload(files) {
     if (files.length == 0)
@@ -30,8 +37,15 @@ export class IntegrantComponent {
         this.progress = Math.round(100 * event.loaded / event.total);
       else if (event.type == HttpEventType.Response)
         this.message = event.body.toString();
-        else
-          this.message = "Aguarde enquanto cadastramos os integrantes :)"
+      else
+        this.message = "Aguarde enquanto cadastramos os integrantes :)"
+    });
+  }
+
+  //retorna todos os integrantes cadastrados
+  getIntegrants() {
+    this.integrantService.getIntegrants().subscribe((data: Array<IIntegrant>) => {
+      this.integrants = data;
     });
   }
 }

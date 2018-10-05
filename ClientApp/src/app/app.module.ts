@@ -1,3 +1,4 @@
+import { LinkComponent } from './link/link.component';
 import { IntegrantComponent } from './integrant/integrant.component';
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,7 +19,8 @@ import { FunctionService } from './Services/function.service';
     NavMenuComponent,
     HomeComponent,
     ConverterComponent,
-    IntegrantComponent
+    IntegrantComponent,
+    LinkComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -28,7 +30,8 @@ import { FunctionService } from './Services/function.service';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'converter', component: ConverterComponent },
-      { path: 'integrant', component: IntegrantComponent}
+      { path: 'integrant', component: IntegrantComponent },
+      { path: 'link', component: LinkComponent }
       // { path: 'fetch-data', component: FetchDataComponent },
     ])
   ],

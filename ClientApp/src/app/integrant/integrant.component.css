@@ -1,0 +1,6 @@
+#upload_button {
+    display: inline-block;
+  }
+  #upload_button input[type=file] {
+    display:none;
+  }
