@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DSProject.Interface;
 using DSProject.Model;
 using DSProject.Util;
 using Microsoft.AspNetCore.Mvc;
+using static DSProject.Util.Enums;
 
 namespace DSProject.Controllers
 {
@@ -83,6 +86,8 @@ namespace DSProject.Controllers
             OnlyNumber();
             OnlyCharacter();
             Cpf();
+            Cnpj();
+            DataCheck();
 
             return _lstFunctions;
         }
@@ -95,7 +100,7 @@ namespace DSProject.Controllers
         /// <param name="isMatch"></param>
         /// <param name="pattern"></param>
         /// <param name="size"></param>
-        private void AddList(string description, object result, bool isMatch, string pattern = "", int size = 0)
+        private void AddList(string description, object result, bool isMatch, string pattern = "", int size = 0, string link = "")
         {
             _lstFunctions.Add(new Function
             {
@@ -103,7 +108,8 @@ namespace DSProject.Controllers
                 Result = result,
                 IsMatch = true,
                 Pattern = pattern,
-                Size = size
+                Size = size,
+                Link = link
             });
 
         }
@@ -126,20 +132,72 @@ namespace DSProject.Controllers
             AddList("Somente letras", _value.Count(x => !char.IsDigit(x)), true);
         }
 
+        /// <summary>
+        /// Validação e verificação de integrantes com possível CPF
+        /// </summary>
         private void Cpf()
         {
             _value = Utils.GetOnlyNumbers(_value);
-            
+
             if (_value.Length < 11 || _value.Length > 11)
-                AddList("CPF", $"O valor {_value} possui {_value.Length} números. CPFs contém 11 números. ", false, "000.000.000-00", 0);
+                AddList("CPF", $"O valor {_value} possui {_value.Length} números. CPFs contém 11 números. ", false, Utils.GetMask(eMaskType.cpf), 0);
             else
             {
                 Integrant integrant = _context.Integrants.Where(x => x.CPF.Equals(Utils.PutCpfMask(_value))).FirstOrDefault();
 
                 if (integrant != null)
-                    AddList("CPF", $"O integrante da Dark Side {integrant.Name} possui este CPF.", true, "000.000.000-00", 11);
+                    AddList("CPF", $"O integrante da Dark Side {integrant.Name} possui este CPF.", true, Utils.GetMask(eMaskType.cpf), 11);
                 else
-                    AddList("CPF", $"Pode ser que o valor seja um CPF: {Utils.PutCpfMask(_value)}", true, "000.000.000-00", 11);
+                    AddList("CPF", $"Pode ser que o valor seja um CPF: {Utils.PutCpfMask(_value)}", true, Utils.GetMask(eMaskType.cpf), 11);
+            }
+        }
+
+        /// <summary>
+        /// Verificação de CNPJ
+        /// </summary>
+        private void Cnpj()
+        {
+
+            _value = Utils.GetOnlyNumbers(_value);
+
+            if (_value.Length < 14 || _value.Length > 14)
+                AddList("CNPJ", $"O valor {_value} possui {_value.Length} números. CNPJs contém 14 números.", false, Utils.GetMask(eMaskType.cnpj));
+            else
+            {
+                AddList("CNPJ", $"Pode ser o valor seja um CNPJ: {Utils.PutCnpjMask(_value)}.", true, Utils.GetMask(eMaskType.cnpj), 14, "http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/cnpjreva_solicitacao.asp");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void DataCheck()
+        {
+            _value = Utils.GetOnlyNumbers(_value);
+
+            if (_value.Length < 8 || _value.Length > 8)
+                AddList("Data", $"Número com {_value.Length} dígitos. Uma data contém 8 dígitos.", false, Utils.GetMask(eMaskType.data));
+            else
+            {
+                int year = _value.Substring(4, 4).ToInt32();
+                int month = _value.Substring(2, 2).ToInt32();
+                int day = _value.Substring(0, 2).ToInt32();
+
+                try
+                {
+                    DateTime dt = new DateTime(year, month, day);
+
+                    if (dt != new DateTime())
+                    {
+                        CultureInfo cult = new CultureInfo("pt-BR");
+                        string dtFormated = dt.ToString("dd/MM/yyyy", cult);
+                        AddList("Data", $"Pode ser que o valor seja uma data: {dtFormated}", true, Utils.GetMask(eMaskType.data), 8);
+                    }
+                }
+                catch
+                {
+                    AddList("Data", $"Não é uma data válida", false, Utils.GetMask(eMaskType.data), 8);
+                }
             }
         }
 

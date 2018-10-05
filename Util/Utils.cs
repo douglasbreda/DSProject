@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using static DSProject.Util.Enums;
 
 namespace DSProject.Util
 {
@@ -34,6 +35,25 @@ namespace DSProject.Util
             catch
             {
                 return cpf;
+            }
+        }
+
+        /// <summary>
+        /// Coloca uma máscara de CNPJ
+        /// </summary>
+        public static string PutCnpjMask(string cnpj)
+        {
+            try
+            {
+                cnpj = RemoveMask(cnpj);
+
+                cnpj = Convert.ToUInt64(cnpj).ToString(@"00\.000\.000\/0000\-00");
+
+                return cnpj;
+            }
+            catch
+            {
+                return cnpj;
             }
         }
 
@@ -109,6 +129,26 @@ namespace DSProject.Util
         public static string GetOnlyNumbers(string value)
         {
             return new String(value.Where(Char.IsDigit).ToArray());
+        }
+
+        /// <summary>
+        /// Retorna uma máscara a partir de um tipo
+        /// </summary>
+        public static string GetMask(eMaskType maskType)
+        {
+            switch (maskType)
+            {
+                case eMaskType.cpf:
+                    return "000.000.000-00";
+                case eMaskType.cnpj:
+                    return "00.000.000/0000-00";
+                case eMaskType.cep:
+                    return "00000-000";
+                case eMaskType.data:
+                    return "00/00/0000";
+            }
+
+            return "";
         }
     }
 }
