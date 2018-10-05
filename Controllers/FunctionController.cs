@@ -92,6 +92,7 @@ namespace DSProject.Controllers
             Phone();
             CellPhone();
             CheckColor();
+            LetterToNumber();
 
             return _lstFunctions;
         }
@@ -271,10 +272,22 @@ namespace DSProject.Controllers
 
             if (regex.Match(_color).Success)
             {
-                AddList("Cor", $"Pode ser que a sequência seja uma cor: {_color}", true, "", 0, "", "<div class=\"boxColor\" style=\"background: #13b4ff\"><\/div>");
+                AddList("Cor", $"Pode ser que a sequência seja uma cor: {_color}", true, "", 0, "", "<div class=\"boxColor\" style=\"background: #13b4ff\"></div>");
             }
         }
 
+        /// <summary>
+        /// Conversão de letras para números
+        /// </summary>
+        private void LetterToNumber()
+        {
+            string _onlyLetters = Utils.GetOnlyCharacteres(_value);
+
+            AddList("Letras para números (A -> Z) (Não considera os números na palavra)", Utils.GetNumbersFromLetterAZ(_onlyLetters), true, "", _onlyLetters.Length, "", "");
+            AddList("Letras para números (A -> Z) (Considerando números na palavra)", Utils.GetNumbersFromLetterAZ(_value), true, "", _value.Length, "", "");
+            AddList("Letras para números (Z -> A) (Não considera os números na palavra)", Utils.GetNumbersFromLetterZA(_onlyLetters), true, "", _onlyLetters.Length, "", "");
+            AddList("Letras para números (Z -> A) (Considerando números na palavra)", Utils.GetNumbersFromLetterZA(_value), true, "", _onlyLetters.Length, "", "");
+        }
 
         #endregion
     }

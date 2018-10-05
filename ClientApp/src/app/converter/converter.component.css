@@ -9,3 +9,7 @@
 .blue{
     background: #13b4ff;
 }
+
+#validationValue{
+    padding-left: 15px;
+}

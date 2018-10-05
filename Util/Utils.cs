@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using static DSProject.Util.Enums;
 
 namespace DSProject.Util
@@ -166,6 +168,14 @@ namespace DSProject.Util
         }
 
         /// <summary>
+        /// Extrai somente os caracteres de uma string
+        /// </summary>
+        public static string GetOnlyCharacteres(string value)
+        {
+            return new String(value.Where(x => !char.IsDigit(x)).ToArray());
+        }
+
+        /// <summary>
         /// Retorna uma máscara a partir de um tipo
         /// </summary>
         public static string GetMask(eMaskType maskType)
@@ -192,6 +202,46 @@ namespace DSProject.Util
             }
 
             return "";
+        }
+
+        /// <summary>
+        /// Retorna os número convertidos de A a Z
+        /// </summary>
+        public static string GetNumbersFromLetterAZ(string word)
+        {
+            StringBuilder _numbers = new StringBuilder();
+            List<string> _alphabet = new List<string>() { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+
+            for (int i = 0; i < word.Length; i++)
+            {
+                char character = word.ElementAt(i);
+                if (char.IsDigit(character))
+                    _numbers.Append(character).Append(" ");
+                else
+                    _numbers.Append(_alphabet.IndexOf(character.ToString()) + 1).Append(" ");
+            }
+
+            return _numbers.ToString();
+        }
+
+        /// <summary>
+        /// Retorna os número convertidos de A a Z
+        /// </summary>
+        public static string GetNumbersFromLetterZA(string word)
+        {
+            StringBuilder _numbers = new StringBuilder();
+            List<string> _alphabet = new List<string>() { "z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a" };
+
+            for (int i = 0; i < word.Length; i++)
+            {
+                char character = word.ElementAt(i);
+                if (char.IsDigit(character))
+                    _numbers.Append(character).Append(" ");
+                else
+                    _numbers.Append(_alphabet.IndexOf(character.ToString()) + 1).Append(" ");
+            }
+
+            return _numbers.ToString();
         }
     }
 }
