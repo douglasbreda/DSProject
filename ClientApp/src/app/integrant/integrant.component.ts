@@ -13,8 +13,8 @@ export class IntegrantComponent {
   public progress: number;
   public message: string;
   integrants: IIntegrant[] = [];
-  displayedColumns: string[] = ['id', 'registrationDate', 'name',
-    'datOfBirth', 'cellPhone', 'email']
+  // displayedColumns: string[] = ['id', 'registrationDate', 'name',
+  //   'datOfBirth', 'cellPhone', 'email']
 
   constructor(private http: HttpClient, private integrantService: IntegrantService) { }
 

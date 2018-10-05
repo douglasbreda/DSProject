@@ -12,6 +12,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { ConverterComponent } from './converter/converter.component';
 import { FunctionService } from './Services/function.service';
+import { IntegrantService } from './Services/integrant.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { FunctionService } from './Services/function.service';
       // { path: 'fetch-data', component: FetchDataComponent },
     ])
   ],
-  providers: [FunctionService],
+  providers: [FunctionService, IntegrantService],
   bootstrap: [AppComponent, ConverterComponent, IntegrantComponent]
 })
 export class AppModule { }

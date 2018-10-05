@@ -2,7 +2,7 @@
 <div id="upload_button">
   <label>
     <input #file type="file" single (change)="upload(file.files)" />
-    <span class="btn btn-primary">Importar arquivo de integrantes</span>
+    <span class="btn btn-primary">Importar arquivo de integrantes (.xlsx) </span>
     <button type="button" class="btn btn-secondary" (click)="getIntegrants()">Consultar</button>
     <br />
     <span style="font-weight:bold;color:green;" *ngIf="progress > 0 && progress < 100">
@@ -18,18 +18,25 @@
 <br>
 <hr>
 
-<!-- <mat-table #table [dataSource]="integrants" class="mat-elevation-z8">
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>Id</th>
-    <td mat-cell *matCellDef="let integrant">{{integrant.id}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let integrant">{{integrant.name}}</td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-</mat-table > -->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Nome</th>
+      <!-- <th scope="col">Data de Cadastro</th> -->
+      <th scope="col">Data de Nascimento</th>
+      <th scope="col">Celular</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let integrant of integrants">
+      <td>{{integrant.id}}</td>
+      <td>{{integrant.name}}</td>
+      <!-- <td>{{integrant.registrationDate|date: "MM/dd/yyyy"}}</td> -->
+      <td>{{integrant.dateOfBirth|date: "dd/MM/yyyy"}}</td>
+      <td>{{integrant.cellPhone}}</td>
+      <td>{{integrant.email}}</td>
+    </tr>
+  </tbody>
+</table>
