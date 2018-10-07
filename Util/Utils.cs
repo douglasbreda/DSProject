@@ -207,12 +207,18 @@ namespace DSProject.Util
         /// <summary>
         /// Retorna os número convertidos de A a Z
         /// </summary>
-        public static string GetNumbersFromLetterAZ(string word)
+        public static string GetNumbersFromLetterAZ(string word, bool uniqueLetter)
         {
             StringBuilder _numbers = new StringBuilder();
             List<string> _alphabet = new List<string>() { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+            int total = 0;
 
-            for (int i = 0; i < word.Length; i++)
+            if (uniqueLetter)
+                total = 1;
+            else
+                total = word.Length;
+
+            for (int i = 0; i < total; i++)
             {
                 char character = word.ElementAt(i);
                 if (char.IsDigit(character))
@@ -227,12 +233,18 @@ namespace DSProject.Util
         /// <summary>
         /// Retorna os número convertidos de A a Z
         /// </summary>
-        public static string GetNumbersFromLetterZA(string word)
+        public static string GetNumbersFromLetterZA(string word, bool uniqueLetter)
         {
             StringBuilder _numbers = new StringBuilder();
             List<string> _alphabet = new List<string>() { "z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a" };
+            int total = 0;
 
-            for (int i = 0; i < word.Length; i++)
+            if (uniqueLetter)
+                total = 1;
+            else
+                total = word.Length;
+
+            for (int i = 0; i < total; i++)
             {
                 char character = word.ElementAt(i);
                 if (char.IsDigit(character))
@@ -242,6 +254,60 @@ namespace DSProject.Util
             }
 
             return _numbers.ToString();
+        }
+
+        /// <summary>
+        /// Retorna uma possível palavra a partir de uma sequência numérica
+        /// </summary>
+        public static string GetLettersFromNumberAZ(string numberSequence, bool uniqueNumber)
+        {
+            StringBuilder _word = new StringBuilder();
+            List<string> _alphabet = new List<string>() { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+            int total = 0;
+
+            if (uniqueNumber)
+                total = 1;
+            else
+                total = numberSequence.Length;
+
+            for (int i = 0; i < total; i++)
+            {
+                char character = numberSequence.ElementAt(i);
+
+                if (!char.IsDigit(character))
+                    _word.Append(character).Append(" ");
+                else
+                    _word.Append(_alphabet.ElementAt(numberSequence.ToInt32() - 1)).Append(" ");
+            }
+
+            return _word.ToString();
+        }
+
+        /// <summary>
+        /// Retorna uma possível palavra a partir de uma sequência numérica
+        /// </summary>
+        public static string GetLettersFromNumberZA(string numberSequence, bool uniqueNumber)
+        {
+            StringBuilder _word = new StringBuilder();
+            List<string> _alphabet = new List<string>() { "z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a" };
+            int total = 0;
+
+            if (uniqueNumber)
+                total = 1;
+            else
+                total = numberSequence.Length;
+
+            for (int i = 0; i < total; i++)
+            {
+                char character = numberSequence.ElementAt(i);
+
+                if (!char.IsDigit(character))
+                    _word.Append(character).Append(" ");
+                else
+                    _word.Append(_alphabet.ElementAt(numberSequence.ToInt32() - 1)).Append(" ");
+            }
+
+            return _word.ToString();
         }
     }
 }
