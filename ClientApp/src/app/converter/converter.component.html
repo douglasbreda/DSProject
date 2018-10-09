@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-lg-6">
       <div class="input-group">
-        <input type="text" class="form-control" placeholder="Informe aqui o código a ser avaliado...." [formControl]="textValue">
+        <input type="text" class="form-control" placeholder="Informe aqui o código a ser avaliado...." [formControl]="textValue" (keyup.enter)="verifyButton()">
         <span class="input-group-btn">
           <button (click)="verifyButton()" class="btn btn-default" type="button">Verificar</button>
         </span>
@@ -13,7 +13,6 @@
 </div>
 
 <h3>Resultados</h3>
-<hr />
 <table class="table">
   <tr>
     <td>Descrição</td>
@@ -21,10 +20,10 @@
     <td>Tamanho</td>
     <td>Resultado</td>
     <td>Link</td>
-    <td>IsMatch</td>
+    <!-- <td>IsMatch</td> -->
     <td>Extra</td>
   </tr>
-  <tr *ngFor="let function of functions">
+  <tr *ngFor="let function of functions" [ngStyle]="function.isMatch && {'background-color':'#90EE90'}">
     <td>{{function.description}}</td>
     <td>{{function.pattern}}</td>
     <td>{{function.size}}</td>
@@ -33,7 +32,7 @@
     <ng-template #emptyLink>
       <td> - </td>
     </ng-template>
-    <td>{{function.isMatch}}</td>
+    <!-- <td>{{function.isMatch}}</td> -->
     <td *ngIf="!function.html; else htmlCode"> - </td>
     <ng-template #htmlCode>
       <td><span [innerHTML]="function.html"></span></td>

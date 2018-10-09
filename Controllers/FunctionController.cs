@@ -328,32 +328,35 @@ namespace DSProject.Controllers
             string _onlyNumbers = Utils.GetOnlyNumbers(_value);
             string[] _withSpace = _value.Split(" ");
 
-            if (_withSpace.Length == 0)//Se não for informado com espaço considera número por número
+            if (!string.IsNullOrEmpty(_onlyNumbers))
             {
-                AddList("Números para letras (A -> Z) (Não considera letras na palavra)", Utils.GetLettersFromNumberAZ(_onlyNumbers, false), true, "", _onlyNumbers.Length, "", "");
-                AddList("Números para letras (A -> Z) (Considerando letras na palavra)", Utils.GetLettersFromNumberAZ(_value, false), true, "", _value.Length, "", "");
-                AddList("Números para letras (Z -> A) (Não considera letras na palavra)", Utils.GetLettersFromNumberZA(_onlyNumbers, false), true, "", _onlyNumbers.Length, "", "");
-                AddList("Números para letras (Z -> A) (Considerando letras na palavra)", Utils.GetLettersFromNumberZA(_value, false), true, "", _value.Length, "", "");
-            }
-            else
-            {
-                StringBuilder _AZWithoutLetters = new StringBuilder();
-                StringBuilder _AZWithLetters = new StringBuilder();
-                StringBuilder _ZAWithoutLetters = new StringBuilder();
-                StringBuilder _ZAWithLetters = new StringBuilder();
-
-                foreach (string item in _withSpace)
+                if (_withSpace.Length == 0)//Se não for informado com espaço considera número por número
                 {
-                    _AZWithoutLetters.Append(Utils.GetLettersFromNumberAZ(item, true));
-                    _AZWithLetters.Append(Utils.GetLettersFromNumberAZ(item, true));
-                    _ZAWithoutLetters.Append(Utils.GetLettersFromNumberZA(item, true));
-                    _ZAWithLetters.Append(Utils.GetLettersFromNumberZA(item, true));
+                    AddList("Números para letras (A -> Z) (Não considera letras na palavra)", Utils.GetLettersFromNumberAZ(_onlyNumbers, false), true, "", _onlyNumbers.Length, "", "");
+                    AddList("Números para letras (A -> Z) (Considerando letras na palavra)", Utils.GetLettersFromNumberAZ(_value, false), true, "", _value.Length, "", "");
+                    AddList("Números para letras (Z -> A) (Não considera letras na palavra)", Utils.GetLettersFromNumberZA(_onlyNumbers, false), true, "", _onlyNumbers.Length, "", "");
+                    AddList("Números para letras (Z -> A) (Considerando letras na palavra)", Utils.GetLettersFromNumberZA(_value, false), true, "", _value.Length, "", "");
                 }
+                else
+                {
+                    StringBuilder _AZWithoutLetters = new StringBuilder();
+                    StringBuilder _AZWithLetters = new StringBuilder();
+                    StringBuilder _ZAWithoutLetters = new StringBuilder();
+                    StringBuilder _ZAWithLetters = new StringBuilder();
 
-                AddList("Números para letras (A -> Z) (Não considera letras na palavra)", _AZWithoutLetters.ToString(), true, "", _AZWithoutLetters.Length, "", "");
-                AddList("Números para letras (A -> Z) (Considerando letras na palavra)", _AZWithLetters.ToString(), true, "", _AZWithLetters.Length, "", "");
-                AddList("Números para letras (Z -> A) (Não considera letras na palavra)", _ZAWithoutLetters.ToString(), true, "", _ZAWithoutLetters.Length, "", "");
-                AddList("Números para letras (Z -> A) (Considerando letras na palavra)", _ZAWithoutLetters.ToString(), true, "", _ZAWithoutLetters.Length, "", "");
+                    foreach (string item in _withSpace)
+                    {
+                        _AZWithoutLetters.Append(Utils.GetLettersFromNumberAZ(item, true));
+                        _AZWithLetters.Append(Utils.GetLettersFromNumberAZ(item, true));
+                        _ZAWithoutLetters.Append(Utils.GetLettersFromNumberZA(item, true));
+                        _ZAWithLetters.Append(Utils.GetLettersFromNumberZA(item, true));
+                    }
+
+                    AddList("Números para letras (A -> Z) (Não considera letras na palavra)", _AZWithoutLetters.ToString(), true, "", _AZWithoutLetters.Length, "", "");
+                    AddList("Números para letras (A -> Z) (Considerando letras na palavra)", _AZWithLetters.ToString(), true, "", _AZWithLetters.Length, "", "");
+                    AddList("Números para letras (Z -> A) (Não considera letras na palavra)", _ZAWithoutLetters.ToString(), true, "", _ZAWithoutLetters.Length, "", "");
+                    AddList("Números para letras (Z -> A) (Considerando letras na palavra)", _ZAWithoutLetters.ToString(), true, "", _ZAWithoutLetters.Length, "", "");
+                }
             }
         }
 
