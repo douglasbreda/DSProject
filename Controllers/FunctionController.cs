@@ -326,11 +326,14 @@ namespace DSProject.Controllers
         private void NumberToLetter()
         {
             string _onlyNumbers = Utils.GetOnlyNumbers(_value);
-            string[] _withSpace = _value.Split(" ");
+            string[] _withSpace = null;
+
+            if (_value.Contains(" "))
+                _withSpace = _value.Split(" ");
 
             if (!string.IsNullOrEmpty(_onlyNumbers))
             {
-                if (_withSpace.Length == 0)//Se não for informado com espaço considera número por número
+                if (_withSpace == null || _withSpace.Length == 0)//Se não for informado com espaço considera número por número
                 {
                     AddList("Números para letras (A -> Z) (Não considera letras na palavra)", Utils.GetLettersFromNumberAZ(_onlyNumbers, false), true, "", _onlyNumbers.Length, "", "");
                     AddList("Números para letras (A -> Z) (Considerando letras na palavra)", Utils.GetLettersFromNumberAZ(_value, false), true, "", _value.Length, "", "");
