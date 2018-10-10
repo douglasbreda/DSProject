@@ -95,6 +95,7 @@ namespace DSProject.Controllers
             CheckColor();
             LetterToNumber();
             NumberToLetter();
+            Cep();
 
             return _lstFunctions;
         }
@@ -362,6 +363,42 @@ namespace DSProject.Controllers
                 }
             }
         }
+
+        /// <summary>
+        /// Função para verificar se o CEP é válido e existe na base de dados da equipe
+        /// </summary>
+        private void Cep()
+        {
+            string _cep = Utils.RemoveMask(_value);
+
+            if (_cep.Length == 8)
+            {
+                List<Integrant> _integrants = _context.Integrants.Where(integrant => Utils.RemoveMask(integrant.AdressCep).Equals(_cep)).ToList();
+
+                if (_integrants != null)
+                {
+                    if (_integrants.Count > 1)
+                    {
+                        string _integrantsNames = string.Join(", ", _integrants.Select(x => x.Name));
+
+                        AddList("CEP", $"Os integrantes da Dark Side {_integrantsNames} possuem este CEP", true, Utils.GetMask(eMaskType.cep), 8, "", "");
+                    }
+                    else
+                    {
+                            AddList("CEP", $"O integrante da Dark Side {_integrants.FirstOrDefault().Name} possui este CEP", true, Utils.GetMask(eMaskType.cep), 8, "", "");
+                    }
+
+                }
+                else
+                    AddList("CEP", $"Pode ser que o valor seja um CEP: {Utils.PutCepMask(_cep)}", true, Utils.GetMask(eMaskType.cep), 0, "", "");
+            }
+            else
+            {
+                AddList("CEP", "Não é um CEP válido. Um CEP contém 8 caracteres", false, Utils.GetMask(eMaskType.cep), _cep.Length, "", "");
+            }
+        }
+
+
 
 
         #endregion

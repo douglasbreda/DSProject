@@ -10,6 +10,8 @@ namespace DSProject.Util
     public static class Utils
     {
 
+        #region [Methods]
+
         ///Extensão para facilitar a conversão de datas
         public static DateTime ToDateTime(this object obj)
         {
@@ -56,6 +58,25 @@ namespace DSProject.Util
             catch
             {
                 return cnpj;
+            }
+        }
+
+        /// <summary>
+        /// Função para aplicar a máscara de CEP
+        /// </summary>
+        public static string PutCepMask(string cep)
+        {
+            try
+            {
+                cep = RemoveMask(cep);
+
+                cep = Convert.ToUInt64(cep).ToString(@"00000\-000");
+
+                return cep;
+            }
+            catch
+            {
+                return cep;
             }
         }
 
@@ -316,5 +337,8 @@ namespace DSProject.Util
 
             return _word.ToString();
         }
+
+        #endregion
     }
+
 }
