@@ -13,7 +13,7 @@
 </div>
 
 <h3>Resultados</h3>
-<table class="table">
+<table class="table results">
   <tr>
     <td>Descrição</td>
     <td>Padrão</td>
@@ -35,7 +35,7 @@
     <!-- <td>{{function.isMatch}}</td> -->
     <td *ngIf="!function.html; else htmlCode"> - </td>
     <ng-template #htmlCode>
-      <td><span [innerHTML]="function.html"></span></td>
+      <td><span [innerHTML]="getHtml(function.html)"></span></td>
     </ng-template>
   </tr>
 </table>

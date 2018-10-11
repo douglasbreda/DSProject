@@ -276,7 +276,9 @@ namespace DSProject.Controllers
 
             if (regex.Match(_color).Success)
             {
-                AddList("Cor", $"Pode ser que a sequência seja uma cor: {_color}", true, "", 0, "", "<div class=\"boxColor\" style=\"background: #13b4ff\"></div>");
+                // <div class=\"boxColor\" style=\"background: #13b4ff\"></div>
+                // <div style='width:10px;height:100px;border:1px solid #000;background-color:#13b4ff'>
+                AddList("Cor", $"Pode ser que a sequência seja uma cor: {_color}", true, "", 0, "", $"colorBox;{_color}");
             }
         }
 
@@ -415,13 +417,7 @@ namespace DSProject.Controllers
             {
                 AddList("CEP", "Não é um CEP válido. Um CEP contém 8 caracteres", false, Utils.GetMask(eMaskType.cep), _cep.Length, "", "");
             }
-
-
         }
-
-
-
-
         #endregion
     }
 }
