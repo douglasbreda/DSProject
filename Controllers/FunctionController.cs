@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using DSProject.Interface;
 using DSProject.Model;
 using DSProject.Util;
@@ -157,7 +158,7 @@ namespace DSProject.Controllers
                 Integrant integrant = _context.Integrants.Where(x => x.CPF.Equals(Utils.PutCpfMask(_cpf))).FirstOrDefault();
 
                 if (integrant != null)
-                    AddList("CPF", $"O integrante da Dark Side {integrant.Name} possui este CPF.", true, Utils.GetMask(eMaskType.cpf), 11);
+                    AddList("CPF", $"O(A) integrante da Dark Side {integrant.Name} possui este CPF.", true, Utils.GetMask(eMaskType.cpf), 11);
                 else
                     AddList("CPF", $"Pode ser que o valor seja um CPF: {Utils.PutCpfMask(_cpf)}", true, Utils.GetMask(eMaskType.cpf), 11);
             }
@@ -375,7 +376,7 @@ namespace DSProject.Controllers
             {
                 List<Integrant> _integrants = _context.Integrants.Where(integrant => Utils.RemoveMask(integrant.AdressCep).Equals(_cep)).ToList();
 
-                if (_integrants != null)
+                if (_integrants != null && _integrants.Count > 0)
                 {
                     if (_integrants.Count > 1)
                     {
@@ -385,17 +386,37 @@ namespace DSProject.Controllers
                     }
                     else
                     {
-                            AddList("CEP", $"O integrante da Dark Side {_integrants.FirstOrDefault().Name} possui este CEP", true, Utils.GetMask(eMaskType.cep), 8, "", "");
+                        AddList("CEP", $"O(A) integrante da Dark Side {_integrants.FirstOrDefault().Name} possui este CEP", true, Utils.GetMask(eMaskType.cep), 8, "", "");
                     }
 
                 }
                 else
-                    AddList("CEP", $"Pode ser que o valor seja um CEP: {Utils.PutCepMask(_cep)}", true, Utils.GetMask(eMaskType.cep), 0, "", "");
+                {
+                    Adress _adress = WebServiceCEP.Instance.SearchCep(_cep);
+
+                    if (_adress != null)
+                    {
+                        StringBuilder _sbAdressInfo = new StringBuilder();
+
+                        _sbAdressInfo.AppendLine($"<br><strong>Endereço: {_adress.logradouro} </strong>");
+                        _sbAdressInfo.AppendLine($"<br><strong>Bairro: {_adress.bairro} </strong>");
+                        _sbAdressInfo.AppendLine($"<br><strong>Complemento: {_adress.complemento} </strong>");
+                        _sbAdressInfo.AppendLine($"<br><strong>Cidade: {_adress.localidade} </strong>");
+                        _sbAdressInfo.AppendLine($"<br><strong>IBGE: {_adress.ibge} </strong>");
+                        _sbAdressInfo.AppendLine($"<br><strong>Estado: {_adress.uf} </strong>");
+
+                        AddList("CEP", $"Foi encontrado um CEP no site dos correios. Verifique ao lado ", true, Utils.GetMask(eMaskType.cep), 0, "", _sbAdressInfo.ToString());
+                    }
+                    else
+                        AddList("CEP", $"Pode ser que o valor seja um CEP: {Utils.PutCepMask(_cep)}", true, Utils.GetMask(eMaskType.cep), 0, "", "");
+                }
             }
             else
             {
                 AddList("CEP", "Não é um CEP válido. Um CEP contém 8 caracteres", false, Utils.GetMask(eMaskType.cep), _cep.Length, "", "");
             }
+
+
         }
 
 
