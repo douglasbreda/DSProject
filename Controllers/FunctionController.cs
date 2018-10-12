@@ -22,6 +22,7 @@ namespace DSProject.Controllers
         private List<Function> _lstFunctions = new List<Function>();
 
         private string _value = string.Empty;
+        private string _cifraCesar = string.Empty;
 
         private DSBaseContext _context;
 
@@ -49,11 +50,12 @@ namespace DSProject.Controllers
         }
 
         // GET: api/Function/5
-        [HttpGet("{value}", Name = "GetFunction")]
+        [HttpGet("{value}/{cifraCesar}", Name = "GetFunction")]
         // public IEnumerable<IFunction> Get(string value)
-        public IActionResult Get(string value)
+        public IActionResult Get(string value, string cifraCesar)
         {
             _value = value;
+            _cifraCesar = cifraCesar;
             return new ObjectResult(GetResults());
         }
 
@@ -97,6 +99,7 @@ namespace DSProject.Controllers
             LetterToNumber();
             NumberToLetter();
             Cep();
+            CaesarCipher();
 
             return _lstFunctions;
         }
@@ -418,6 +421,34 @@ namespace DSProject.Controllers
                 AddList("CEP", "Não é um CEP válido. Um CEP contém 8 caracteres", false, Utils.GetMask(eMaskType.cep), _cep.Length, "", "");
             }
         }
+
+        /// <summary>
+        /// Retorna a palavra alterada utilizando a Cifra de Cesar
+        /// </summary>
+        private void CaesarCipher()
+        {
+            int _movement = _cifraCesar.ToInt32();
+            if (_movement > 0)
+            {
+                string _lowerValue = _value.ToLower();
+                string _encrypt = string.Empty;
+
+                for (int i = 0; i < _lowerValue.Length; i++)
+                {
+                    int ASCII = (int)_lowerValue[i];
+
+                    //Coloca a chave fixa adicionando X posições no numero da tabela ASCII
+                    int ASCIIC = ASCII + _movement;
+
+                    _encrypt += Char.ConvertFromUtf32(ASCIIC);
+                }
+
+                if (!string.IsNullOrEmpty(_encrypt))
+                    AddList("Cifra de César", _encrypt, true, "", _encrypt.Length, "", "");
+            }
+
+        }
+
         #endregion
     }
 }

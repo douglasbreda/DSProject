@@ -9,10 +9,12 @@ import { map } from 'rxjs/operator/map';
 export class FunctionService {
   constructor(private http: HttpClient) { }
 
-    //get
-  getFunctions(value: string)  {
+  //get
+  getFunctions(value: string, cifraCesar: string) {
     console.log(value);
-    return this.http.get('api/Function/' + value);
-    
-    }
+    if (cifraCesar != '')
+      return this.http.get('api/Function/' + value + '/' + cifraCesar);
+    else
+      return this.http.get('api/Function/' + value + '/0');
+  }
 }
