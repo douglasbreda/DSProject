@@ -88,8 +88,8 @@ namespace DSProject.Controllers
         /// <returns></returns>
         public List<Function> GetResults()
         {
-            OnlyNumber();
-            OnlyCharacter();
+            //OnlyNumber();
+            //OnlyCharacter();
             Cpf();
             Cnpj();
             DataCheck();
@@ -446,7 +446,6 @@ namespace DSProject.Controllers
                 if (!string.IsNullOrEmpty(_encrypt))
                     AddList("Cifra de César", _encrypt, true, "", _encrypt.Length, "", "");
             }
-
         }
 
         #endregion

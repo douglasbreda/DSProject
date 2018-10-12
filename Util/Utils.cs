@@ -288,22 +288,26 @@ namespace DSProject.Util
         {
             StringBuilder _word = new StringBuilder();
             // List<string> _alphabet = new List<string>() { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
-            int total = 0;
             numberSequence = numberSequence.ToLower();
 
             if (uniqueNumber)
-                total = 1;
-            else
-                total = numberSequence.Length;
-
-            for (int i = 0; i < total; i++)
             {
-                char character = numberSequence.ElementAt(i);
-
-                if (!char.IsDigit(character))
-                    _word.Append(character).Append(" ");
+                if (numberSequence.Where(Char.IsDigit).Count() == 0)
+                    _word.Append(numberSequence).Append(" ");
                 else
-                    _word.Append(Convert.ToChar(character.ToString().ToInt32() + 64)).Append(" ");//Converte de acordo com a tabela ASCII
+                    _word.Append(Convert.ToChar(numberSequence.ToInt32() + 64)).Append(" ");//Converte de acordo com a tabela ASCII
+            }
+            else
+            {
+                for (int i = 0; i < numberSequence.Length; i++)
+                {
+                    char character = numberSequence.ElementAt(i);
+
+                    if (!char.IsDigit(character))
+                        _word.Append(character).Append(" ");
+                    else
+                        _word.Append(Convert.ToChar(character.ToString().ToInt32() + 64)).Append(" ");//Converte de acordo com a tabela ASCII
+                }
             }
 
             return _word.ToString();
@@ -316,23 +320,27 @@ namespace DSProject.Util
         {
             StringBuilder _word = new StringBuilder();
             // List<string> _alphabet = new List<string>() { "z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a" };
-            int total = 0;
             numberSequence = numberSequence.ToLower();
 
             if (uniqueNumber)
-                total = 1;
-            else
-                total = numberSequence.Length;
-
-            for (int i = 0; i < total; i++)
             {
-                char character = numberSequence.ElementAt(i);
-
-                if (!char.IsDigit(character))
-                    _word.Append(character).Append(" ");
+                if (numberSequence.Where(Char.IsDigit).Count() == 0)
+                    _word.Append(numberSequence).Append(" ");
                 else
-                    _word.Append(Convert.ToChar(91 - character.ToString().ToInt32())).Append(" ");
-                // _word.Append(_alphabet.ElementAt(numberSequence.ToInt32() - 1)).Append(" ");
+                    _word.Append(Convert.ToChar(91 - numberSequence.ToInt32())).Append(" ");
+            }
+            else
+            {
+                for (int i = 0; i < numberSequence.Length; i++)
+                {
+                    char character = numberSequence.ElementAt(i);
+
+                    if (!char.IsDigit(character))
+                        _word.Append(character).Append(" ");
+                    else
+                        _word.Append(Convert.ToChar(91 - character.ToString().ToInt32())).Append(" ");
+                    // _word.Append(_alphabet.ElementAt(numberSequence.ToInt32() - 1)).Append(" ");
+                }
             }
 
             return _word.ToString();

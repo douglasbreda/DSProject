@@ -51,6 +51,8 @@ export class ConverterComponent implements OnInit {
         switch (key) {
             case "colorBox":
                  return this._sanitizer.bypassSecurityTrustHtml( "<div style=\"width:30px;height:30px;border:1px solid #000;background-color:" + value + "\">");
+            default:
+                return this._sanitizer.bypassSecurityTrustHtml(key);
         }
     }
 }
