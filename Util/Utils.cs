@@ -231,7 +231,6 @@ namespace DSProject.Util
         public static string GetNumbersFromLetterAZ(string word, bool uniqueLetter)
         {
             StringBuilder _numbers = new StringBuilder();
-            // List<string> _alphabet = new List<string>() { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
             int total = 0;
             word = word.ToUpper();
 
@@ -247,7 +246,6 @@ namespace DSProject.Util
                     _numbers.Append(character).Append(" ");
                 else
                     _numbers.Append((character.ToInt32() - 64).ToString()).Append(" ");
-                // _numbers.Append(_alphabet.IndexOf(character.ToString()) + 1).Append(" ");
             }
 
             return _numbers.ToString();
@@ -259,7 +257,6 @@ namespace DSProject.Util
         public static string GetNumbersFromLetterZA(string word, bool uniqueLetter)
         {
             StringBuilder _numbers = new StringBuilder();
-            // List<string> _alphabet = new List<string>() { "z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a" };
             int total = 0;
             word = word.ToUpper();
 
@@ -275,7 +272,6 @@ namespace DSProject.Util
                     _numbers.Append(character).Append(" ");
                 else
                     _numbers.Append(91 - character.ToInt32()).Append(" ");
-                // _numbers.Append(_alphabet.IndexOf(character.ToString()) + 1).Append(" ");
             }
 
             return _numbers.ToString();
@@ -287,7 +283,6 @@ namespace DSProject.Util
         public static string GetLettersFromNumberAZ(string numberSequence, bool uniqueNumber)
         {
             StringBuilder _word = new StringBuilder();
-            // List<string> _alphabet = new List<string>() { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
             numberSequence = numberSequence.ToLower();
 
             if (uniqueNumber)
@@ -319,7 +314,6 @@ namespace DSProject.Util
         public static string GetLettersFromNumberZA(string numberSequence, bool uniqueNumber)
         {
             StringBuilder _word = new StringBuilder();
-            // List<string> _alphabet = new List<string>() { "z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a" };
             numberSequence = numberSequence.ToLower();
 
             if (uniqueNumber)
@@ -339,7 +333,6 @@ namespace DSProject.Util
                         _word.Append(character).Append(" ");
                     else
                         _word.Append(Convert.ToChar(91 - character.ToString().ToInt32())).Append(" ");
-                    // _word.Append(_alphabet.ElementAt(numberSequence.ToInt32() - 1)).Append(" ");
                 }
             }
 
