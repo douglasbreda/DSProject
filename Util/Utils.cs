@@ -83,7 +83,7 @@ namespace DSProject.Util
         /// <summary>
         /// Coloca a máscara nos campos de telefone e celular
         /// </summary>
-        public static string PutPhoneMask(string phone, eMaskType phoneMask)
+        public static string PutPhoneMask(string phone, eMaskType phoneMask, bool withNine = false)
         {
             string _phoneWithMask = string.Empty;
             try
@@ -97,10 +97,16 @@ namespace DSProject.Util
                         _phoneWithMask = Convert.ToUInt64(phone).ToString(@"0000\-0000");
                         break;
                     case eMaskType.cellPhoneWithDDD:
-                        _phoneWithMask = Convert.ToUInt64(phone).ToString(@"\(00\) 00000\-0000");
+                        if (withNine)
+                            _phoneWithMask = Convert.ToUInt64(phone).ToString(@"\(00\) 00000\-0000");
+                        else
+                            _phoneWithMask = Convert.ToUInt64(phone).ToString(@"\(00\) 0000\-0000");
                         break;
                     case eMaskType.cellPhoneWithoutDDD:
-                        _phoneWithMask = Convert.ToUInt64(phone).ToString(@"00000\-0000");
+                        if (withNine)
+                            _phoneWithMask = Convert.ToUInt64(phone).ToString(@"00000\-0000");
+                        else
+                            _phoneWithMask = Convert.ToUInt64(phone).ToString(@"0000\-0000");
                         break;
                 }
 
@@ -119,7 +125,10 @@ namespace DSProject.Util
         {
             return value.Replace("-", "")
                         .Replace(".", "")
-                        .Replace("/", "");
+                        .Replace("/", "")
+                        .Replace("(", "")
+                        .Replace(")", "")
+                        .Replace(" ", "");
         }
 
         //Extensão para facilitar a conversão de bool

@@ -1,3 +1,4 @@
+import { ConfigComponent } from './config/config.component';
 import { LinkComponent } from './link/link.component';
 import { IntegrantComponent } from './integrant/integrant.component';
 
@@ -21,7 +22,8 @@ import { IntegrantService } from './Services/integrant.service';
     HomeComponent,
     ConverterComponent,
     IntegrantComponent,
-    LinkComponent
+    LinkComponent,
+    ConfigComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -32,7 +34,8 @@ import { IntegrantService } from './Services/integrant.service';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'converter', component: ConverterComponent },
       { path: 'integrant', component: IntegrantComponent },
-      { path: 'link', component: LinkComponent }
+      { path: 'link', component: LinkComponent },
+      { path: 'config', component: ConfigComponent }
       // { path: 'fetch-data', component: FetchDataComponent },
     ])
   ],

@@ -12,7 +12,7 @@ namespace DSProject
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup( IConfiguration configuration )
         {
             Configuration = configuration;
         }
@@ -20,32 +20,37 @@ namespace DSProject
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices( IServiceCollection services )
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion( CompatibilityVersion.Version_2_1 );
 
-            services.AddDbContext<DSBaseContext>(options =>
-                                                            options.UseSqlServer(Configuration.GetConnectionString("DSConnection")));
+            services.AddDbContext<DSBaseContext>( options =>
+                                                             options.UseSqlServer( Configuration.GetConnectionString( "DSConnection" ) ) );
 
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            System.Text.Encoding.RegisterProvider( System.Text.CodePagesEncodingProvider.Instance );
 
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
+            services.AddSpaStaticFiles( configuration =>
+             {
+                 configuration.RootPath = "ClientApp/dist";
+             } );
+
+            services.Configure<IISOptions>( options =>
+             {
+                 options.ForwardClientCertificate = false;
+             } );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure( IApplicationBuilder app, IHostingEnvironment env )
         {
-            if (env.IsDevelopment())
+            if ( env.IsDevelopment() )
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler( "/Error" );
                 app.UseHsts();
             }
 
@@ -53,25 +58,26 @@ namespace DSProject
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
 
-            app.UseSpa(spa =>
-            {
+            app.UseMvc( routes =>
+             {
+                 routes.MapRoute(
+                     name: "default",
+                     template: "{controller}/{action=Index}/{id?}" );
+             } );
+
+            app.UseSpa( spa =>
+             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
-            });
+                 if ( env.IsDevelopment() )
+                 {
+                     spa.UseAngularCliServer( npmScript: "start" );
+                 }
+             } );
         }
     }
 }

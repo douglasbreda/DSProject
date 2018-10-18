@@ -46,6 +46,11 @@ namespace DSProject.Model
         /// </summary>
         public string gia { get; set; }
 
+        /// <summary>
+        /// Define se houve erro na consulta
+        /// </summary>
+        public bool erro { get; set; }
+
         #endregion
     }
 }

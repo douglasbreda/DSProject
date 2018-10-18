@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -224,13 +225,25 @@ namespace DSProject.Controllers
 
             if (phone.Length == 8)
             {
-                string formatedPhone = phone.Insert(4, "-");
-                AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 8);
+                string _integrantPhone = IntegrantPhone(phone);
+                if (string.IsNullOrEmpty(_integrantPhone))
+                {
+                    string formatedPhone = phone.Insert(4, "-");
+                    AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 8);
+                }
+                else
+                    AddList("Telefone", _integrantPhone, true, Utils.GetMask(eMaskType.phoneWithoutDDD));
             }
             else if (phone.Length == 10)
             {
-                string formatedPhone = Utils.PutPhoneMask(phone, eMaskType.phoneWithDDD);
-                AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 10);
+                string _integrantPhone = IntegrantPhone(phone);
+                if (string.IsNullOrEmpty(_integrantPhone))
+                {
+                    string formatedPhone = Utils.PutPhoneMask(phone, eMaskType.phoneWithDDD);
+                    AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 10);
+                }
+                else
+                    AddList("Telefone", _integrantPhone, true, Utils.GetMask(eMaskType.phoneWithDDD));
             }
             else if (phone.Length < 8)
             {
@@ -242,28 +255,110 @@ namespace DSProject.Controllers
         }
 
         /// <summary>
+        /// Verifica se no banco de dados há algum(a) integrante com este telefone
+        /// </summary>
+        private string IntegrantPhone(string phone)
+        {
+            string _message = string.Empty;
+
+            try
+            {
+                Integrant _integrant = _context.Integrants.Where(x => Utils.RemoveMask(x.Phone).Equals(Utils.RemoveMask(phone)))
+                                                           .FirstOrDefault();
+
+                if (_integrant != null)
+                    _message = $"O(A) integrante da Dark Side {_integrant.Name} possui este número de telefone";
+                else
+                {
+                    //Faz o teste desconsiderando possível DDD na máscara
+                    Integrant _integrantWithoudDDD = _context.Integrants.Where(x => !string.IsNullOrWhiteSpace(x.Phone.Trim()) && x.Phone.Length > 2 &&
+                                                                                     Utils.RemoveMask(x.Phone).Contains(Utils.RemoveMask(phone)))
+                                                                        .FirstOrDefault();
+
+                    if (_integrantWithoudDDD != null)
+                        _message = $"O(A) integrante da Dark Side {_integrantWithoudDDD.Name} possui este número de celular";
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.InnerException.ToString());
+            }
+
+            return _message;
+        }
+
+
+        /// <summary>
         /// Validação para números de telefone
         /// </summary>
         private void CellPhone()
         {
             string cellPhone = Utils.GetOnlyNumbers(_value);
 
-            if (cellPhone.Length == 9)
+            try
             {
-                string formatedPhone = cellPhone.Insert(5, "-");
-                AddList("Celular", $"Pode ser que o valor seja um número de celular {formatedPhone}", true, Utils.GetMask(eMaskType.cellPhoneWithoutDDD), 9);
+                if (cellPhone.Length == 9 || cellPhone.Length == 8)
+                {
+                    string _integrantCellPhone = IntegrantCellPhone(cellPhone);
+
+                    if (string.IsNullOrEmpty(_integrantCellPhone))
+                    {
+                        string formatedPhone = cellPhone.Insert(5, "-");
+                        AddList("Celular", $"Pode ser que o valor seja um número de celular {formatedPhone}", true, Utils.GetMask(eMaskType.cellPhoneWithoutDDD), 9);
+                    }
+                    else
+                        AddList("Celular", _integrantCellPhone, true, Utils.GetMask(eMaskType.cellPhoneWithoutDDD), 9);
+                }
+                else if (cellPhone.Length == 11 || cellPhone.Length == 10)
+                {
+                    string _integrantCellPhone = IntegrantCellPhone(cellPhone);
+
+                    if (string.IsNullOrEmpty(_integrantCellPhone))
+                    {
+                        string formatedPhone = Utils.PutPhoneMask(cellPhone, eMaskType.cellPhoneWithDDD);
+                        AddList("Celular", $"Pode ser que o valor seja um número de celular {formatedPhone}", true, Utils.GetMask(eMaskType.cellPhoneWithoutDDD), 11);
+                    }
+                    else
+                        AddList("Celular", _integrantCellPhone, true, Utils.GetMask(eMaskType.cellPhoneWithDDD), 9);
+
+                }
+                else if (cellPhone.Length < 9)
+                {
+                    AddList("Celular", $"Não é uma número de celular válido pois contém menos de 9 números", false, "", 0);
+                }
+                else if (cellPhone.Length > 11)
+                    AddList("Celular", $"Não é uma número de celular válido pois contém mais de 11 números", false, "", 0);
             }
-            else if (cellPhone.Length == 11)
+            catch (Exception ex)
             {
-                string formatedPhone = Utils.PutPhoneMask(cellPhone, eMaskType.cellPhoneWithDDD);
-                AddList("Celular", $"Pode ser que o valor seja um número de celular {formatedPhone}", true, Utils.GetMask(eMaskType.cellPhoneWithoutDDD), 11);
+                Debug.WriteLine(ex.InnerException.ToString());
             }
-            else if (cellPhone.Length < 9)
+        }
+
+        /// <summary>
+        /// Verifica se no banco de dados há algum(a) integrante com este telefone
+        /// </summary>
+        private string IntegrantCellPhone(string cellPhone)
+        {
+            string _message = string.Empty;
+            Integrant _integrant = _context.Integrants.Where(x => !string.IsNullOrWhiteSpace(x.CellPhone) &&
+                                                                   Utils.RemoveMask(x.CellPhone).Equals(Utils.RemoveMask(cellPhone)))
+                                                      .FirstOrDefault();
+
+            if (_integrant != null)
+                _message = $"O(A) integrante da Dark Side {_integrant.Name} possui este número de celular";
+            else
             {
-                AddList("Celular", $"Não é uma número de celular válido pois contém menos de 9 números", false, "", 0);
+                //Faz o teste desconsiderando possível DDD na máscara
+                Integrant _integrantWithoudDDD = _context.Integrants.Where(x => !string.IsNullOrEmpty(x.CellPhone) &&
+                                                                                Utils.RemoveMask(x.CellPhone).Contains(Utils.RemoveMask(cellPhone)))
+                                                                    .FirstOrDefault();
+
+                if (_integrantWithoudDDD != null)
+                    _message = $"O(A) integrante da Dark Side {_integrantWithoudDDD.Name} possui este número de celular";
             }
-            else if (cellPhone.Length > 11)
-                AddList("Celular", $"Não é uma número de celular válido pois contém mais de 11 números", false, "", 0);
+
+            return _message;
         }
 
         /// <summary>
@@ -379,7 +474,9 @@ namespace DSProject.Controllers
 
             if (_cep.Length == 8)
             {
-                List<Integrant> _integrants = _context.Integrants.Where(integrant => Utils.RemoveMask(integrant.AdressCep).Equals(_cep)).ToList();
+                List<Integrant> _integrants = _context.Integrants.Where(integrant => !string.IsNullOrWhiteSpace(integrant.AdressCep) &&
+                                                                                     Utils.RemoveMask(integrant.AdressCep).Equals(_cep))
+                                                                 .ToList();
 
                 if (_integrants != null && _integrants.Count > 0)
                 {
@@ -399,7 +496,7 @@ namespace DSProject.Controllers
                 {
                     Adress _adress = WebServiceCEP.Instance.SearchCep(_cep);
 
-                    if (_adress != null)
+                    if (_adress != null && !_adress.erro)
                     {
                         StringBuilder _sbAdressInfo = new StringBuilder();
 
