@@ -101,6 +101,7 @@ namespace DSProject.Controllers
             NumberToLetter();
             Cep();
             CaesarCipher();
+            BinaryToString();
 
             return _lstFunctions;
         }
@@ -153,19 +154,23 @@ namespace DSProject.Controllers
         /// </summary>
         private void Cpf()
         {
-            string _cpf = Utils.GetOnlyNumbers(_value);
-
-            if (_cpf.Length < 11 || _cpf.Length > 11)
-                AddList("CPF", $"O valor {_cpf} possui {_cpf.Length} números. CPFs contém 11 números. ", false, Utils.GetMask(eMaskType.cpf), 0);
-            else
+            try
             {
-                Integrant integrant = _context.Integrants.Where(x => x.CPF.Equals(Utils.PutCpfMask(_cpf))).FirstOrDefault();
+                string _cpf = Utils.GetOnlyNumbers(_value);
 
-                if (integrant != null)
-                    AddList("CPF", $"O(A) integrante da Dark Side {integrant.Name} possui este CPF.", true, Utils.GetMask(eMaskType.cpf), 11);
+                if (_cpf.Length < 11 || _cpf.Length > 11)
+                    AddList("CPF", $"O valor {_cpf} possui {_cpf.Length} números. CPFs contém 11 números. ", false, Utils.GetMask(eMaskType.cpf), 0);
                 else
-                    AddList("CPF", $"Pode ser que o valor seja um CPF: {Utils.PutCpfMask(_cpf)}", true, Utils.GetMask(eMaskType.cpf), 11);
+                {
+                    Integrant integrant = _context.Integrants.Where(x => x.CPF.Equals(Utils.PutCpfMask(_cpf))).FirstOrDefault();
+
+                    if (integrant != null)
+                        AddList("CPF", $"O(A) integrante da Dark Side {integrant.Name} possui este CPF.", true, Utils.GetMask(eMaskType.cpf), 11);
+                    else
+                        AddList("CPF", $"Pode ser que o valor seja um CPF: {Utils.PutCpfMask(_cpf)}", true, Utils.GetMask(eMaskType.cpf), 11);
+                }
             }
+            catch { }
         }
 
         /// <summary>
@@ -173,14 +178,18 @@ namespace DSProject.Controllers
         /// </summary>
         private void Cnpj()
         {
-            string _cnpj = Utils.GetOnlyNumbers(_value);
-
-            if (_cnpj.Length < 14 || _cnpj.Length > 14)
-                AddList("CNPJ", $"O valor {_cnpj} possui {_cnpj.Length} números. CNPJs contém 14 números.", false, Utils.GetMask(eMaskType.cnpj));
-            else
+            try
             {
-                AddList("CNPJ", $"Pode ser o valor seja um CNPJ: {Utils.PutCnpjMask(_cnpj)}.", true, Utils.GetMask(eMaskType.cnpj), 14, "http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/cnpjreva_solicitacao.asp");
+                string _cnpj = Utils.GetOnlyNumbers(_value);
+
+                if (_cnpj.Length < 14 || _cnpj.Length > 14)
+                    AddList("CNPJ", $"O valor {_cnpj} possui {_cnpj.Length} números. CNPJs contém 14 números.", false, Utils.GetMask(eMaskType.cnpj));
+                else
+                {
+                    AddList("CNPJ", $"Pode ser o valor seja um CNPJ: {Utils.PutCnpjMask(_cnpj)}.", true, Utils.GetMask(eMaskType.cnpj), 14, "http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/cnpjreva_solicitacao.asp");
+                }
             }
+            catch { }
         }
 
         /// <summary>
@@ -188,32 +197,36 @@ namespace DSProject.Controllers
         /// </summary>
         private void DataCheck()
         {
-            string _date = Utils.GetOnlyNumbers(_value);
-
-            if (_date.Length < 8 || _date.Length > 8)
-                AddList("Data", $"Número com {_date.Length} dígitos. Uma data contém 8 dígitos.", false, Utils.GetMask(eMaskType.data));
-            else
+            try
             {
-                int year = _date.Substring(4, 4).ToInt32();
-                int month = _date.Substring(2, 2).ToInt32();
-                int day = _date.Substring(0, 2).ToInt32();
+                string _date = Utils.GetOnlyNumbers(_value);
 
-                try
+                if (_date.Length < 8 || _date.Length > 8)
+                    AddList("Data", $"Número com {_date.Length} dígitos. Uma data contém 8 dígitos.", false, Utils.GetMask(eMaskType.data));
+                else
                 {
-                    DateTime dt = new DateTime(year, month, day);
+                    int year = _date.Substring(4, 4).ToInt32();
+                    int month = _date.Substring(2, 2).ToInt32();
+                    int day = _date.Substring(0, 2).ToInt32();
 
-                    if (dt != new DateTime())
+                    try
                     {
-                        CultureInfo cult = new CultureInfo("pt-BR");
-                        string dtFormated = dt.ToString("dd/MM/yyyy", cult);
-                        AddList("Data", $"Pode ser que o valor seja uma data: {dtFormated}", true, Utils.GetMask(eMaskType.data), 8);
+                        DateTime dt = new DateTime(year, month, day);
+
+                        if (dt != new DateTime())
+                        {
+                            CultureInfo cult = new CultureInfo("pt-BR");
+                            string dtFormated = dt.ToString("dd/MM/yyyy", cult);
+                            AddList("Data", $"Pode ser que o valor seja uma data: {dtFormated}", true, Utils.GetMask(eMaskType.data), 8);
+                        }
+                    }
+                    catch
+                    {
+                        AddList("Data", $"Não é uma data válida", false, Utils.GetMask(eMaskType.data), 8);
                     }
                 }
-                catch
-                {
-                    AddList("Data", $"Não é uma data válida", false, Utils.GetMask(eMaskType.data), 8);
-                }
             }
+            catch { }
         }
 
         /// <summary>
@@ -221,36 +234,40 @@ namespace DSProject.Controllers
         /// </summary>
         private void Phone()
         {
-            string phone = Utils.GetOnlyNumbers(_value);
+            try
+            {
+                string phone = Utils.GetOnlyNumbers(_value);
 
-            if (phone.Length == 8)
-            {
-                string _integrantPhone = IntegrantPhone(phone);
-                if (string.IsNullOrEmpty(_integrantPhone))
+                if (phone.Length == 8)
                 {
-                    string formatedPhone = phone.Insert(4, "-");
-                    AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 8);
+                    string _integrantPhone = IntegrantPhone(phone);
+                    if (string.IsNullOrEmpty(_integrantPhone))
+                    {
+                        string formatedPhone = phone.Insert(4, "-");
+                        AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 8);
+                    }
+                    else
+                        AddList("Telefone", _integrantPhone, true, Utils.GetMask(eMaskType.phoneWithoutDDD));
                 }
-                else
-                    AddList("Telefone", _integrantPhone, true, Utils.GetMask(eMaskType.phoneWithoutDDD));
-            }
-            else if (phone.Length == 10)
-            {
-                string _integrantPhone = IntegrantPhone(phone);
-                if (string.IsNullOrEmpty(_integrantPhone))
+                else if (phone.Length == 10)
                 {
-                    string formatedPhone = Utils.PutPhoneMask(phone, eMaskType.phoneWithDDD);
-                    AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 10);
+                    string _integrantPhone = IntegrantPhone(phone);
+                    if (string.IsNullOrEmpty(_integrantPhone))
+                    {
+                        string formatedPhone = Utils.PutPhoneMask(phone, eMaskType.phoneWithDDD);
+                        AddList("Telefone", $"Pode ser que o valor seja um número de telefone {formatedPhone}", true, Utils.GetMask(eMaskType.phoneWithoutDDD), 10);
+                    }
+                    else
+                        AddList("Telefone", _integrantPhone, true, Utils.GetMask(eMaskType.phoneWithDDD));
                 }
-                else
-                    AddList("Telefone", _integrantPhone, true, Utils.GetMask(eMaskType.phoneWithDDD));
+                else if (phone.Length < 8)
+                {
+                    AddList("Telefone", $"Não é uma número de telefone válido pois contém menos de 8 números", false, "", 0);
+                }
+                else if (phone.Length > 10)
+                    AddList("Telefone", $"Não é uma número de telefone válido pois contém mais de 10 números", false, "", 0);
             }
-            else if (phone.Length < 8)
-            {
-                AddList("Telefone", $"Não é uma número de telefone válido pois contém menos de 8 números", false, "", 0);
-            }
-            else if (phone.Length > 10)
-                AddList("Telefone", $"Não é uma número de telefone válido pois contém mais de 10 números", false, "", 0);
+            catch { }
 
         }
 
@@ -259,32 +276,36 @@ namespace DSProject.Controllers
         /// </summary>
         private string IntegrantPhone(string phone)
         {
-            string _message = string.Empty;
-
             try
             {
-                Integrant _integrant = _context.Integrants.Where(x => Utils.RemoveMask(x.Phone).Equals(Utils.RemoveMask(phone)))
-                                                           .FirstOrDefault();
+                string _message = string.Empty;
 
-                if (_integrant != null)
-                    _message = $"O(A) integrante da Dark Side {_integrant.Name} possui este número de telefone";
-                else
+                try
                 {
-                    //Faz o teste desconsiderando possível DDD na máscara
-                    Integrant _integrantWithoudDDD = _context.Integrants.Where(x => !string.IsNullOrWhiteSpace(x.Phone.Trim()) && x.Phone.Length > 2 &&
-                                                                                     Utils.RemoveMask(x.Phone).Contains(Utils.RemoveMask(phone)))
-                                                                        .FirstOrDefault();
+                    Integrant _integrant = _context.Integrants.Where(x => Utils.RemoveMask(x.Phone).Equals(Utils.RemoveMask(phone)))
+                                                               .FirstOrDefault();
 
-                    if (_integrantWithoudDDD != null)
-                        _message = $"O(A) integrante da Dark Side {_integrantWithoudDDD.Name} possui este número de celular";
+                    if (_integrant != null)
+                        _message = $"O(A) integrante da Dark Side {_integrant.Name} possui este número de telefone";
+                    else
+                    {
+                        //Faz o teste desconsiderando possível DDD na máscara
+                        Integrant _integrantWithoudDDD = _context.Integrants.Where(x => !string.IsNullOrWhiteSpace(x.Phone.Trim()) && x.Phone.Length > 2 &&
+                                                                                         Utils.RemoveMask(x.Phone).Contains(Utils.RemoveMask(phone)))
+                                                                            .FirstOrDefault();
+
+                        if (_integrantWithoudDDD != null)
+                            _message = $"O(A) integrante da Dark Side {_integrantWithoudDDD.Name} possui este número de celular";
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.InnerException.ToString());
-            }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.InnerException.ToString());
+                }
 
-            return _message;
+                return _message;
+            }
+            catch { return ""; }
         }
 
 
@@ -293,10 +314,9 @@ namespace DSProject.Controllers
         /// </summary>
         private void CellPhone()
         {
-            string cellPhone = Utils.GetOnlyNumbers(_value);
-
             try
             {
+                string cellPhone = Utils.GetOnlyNumbers(_value);
                 if (cellPhone.Length == 9 || cellPhone.Length == 8)
                 {
                     string _integrantCellPhone = IntegrantCellPhone(cellPhone);
@@ -340,25 +360,29 @@ namespace DSProject.Controllers
         /// </summary>
         private string IntegrantCellPhone(string cellPhone)
         {
-            string _message = string.Empty;
-            Integrant _integrant = _context.Integrants.Where(x => !string.IsNullOrWhiteSpace(x.CellPhone) &&
-                                                                   Utils.RemoveMask(x.CellPhone).Equals(Utils.RemoveMask(cellPhone)))
-                                                      .FirstOrDefault();
-
-            if (_integrant != null)
-                _message = $"O(A) integrante da Dark Side {_integrant.Name} possui este número de celular";
-            else
+            try
             {
-                //Faz o teste desconsiderando possível DDD na máscara
-                Integrant _integrantWithoudDDD = _context.Integrants.Where(x => !string.IsNullOrEmpty(x.CellPhone) &&
-                                                                                Utils.RemoveMask(x.CellPhone).Contains(Utils.RemoveMask(cellPhone)))
-                                                                    .FirstOrDefault();
+                string _message = string.Empty;
+                Integrant _integrant = _context.Integrants.Where(x => !string.IsNullOrWhiteSpace(x.CellPhone) &&
+                                                                       Utils.RemoveMask(x.CellPhone).Equals(Utils.RemoveMask(cellPhone)))
+                                                          .FirstOrDefault();
 
-                if (_integrantWithoudDDD != null)
-                    _message = $"O(A) integrante da Dark Side {_integrantWithoudDDD.Name} possui este número de celular";
+                if (_integrant != null)
+                    _message = $"O(A) integrante da Dark Side {_integrant.Name} possui este número de celular";
+                else
+                {
+                    //Faz o teste desconsiderando possível DDD na máscara
+                    Integrant _integrantWithoudDDD = _context.Integrants.Where(x => !string.IsNullOrEmpty(x.CellPhone) &&
+                                                                                    Utils.RemoveMask(x.CellPhone).Contains(Utils.RemoveMask(cellPhone)))
+                                                                        .FirstOrDefault();
+
+                    if (_integrantWithoudDDD != null)
+                        _message = $"O(A) integrante da Dark Side {_integrantWithoudDDD.Name} possui este número de celular";
+                }
+
+                return _message;
             }
-
-            return _message;
+            catch { return ""; }
         }
 
         /// <summary>
@@ -366,18 +390,22 @@ namespace DSProject.Controllers
         /// </summary>
         private void CheckColor()
         {
-            string _color = _value;
-            if (!_color.StartsWith("#"))
-                _color = $"#{_value}";
-
-            Regex regex = new Regex("^#(?:[0-9a-fA-F]{3}){1,2}$");
-
-            if (regex.Match(_color).Success)
+            try
             {
-                // <div class=\"boxColor\" style=\"background: #13b4ff\"></div>
-                // <div style='width:10px;height:100px;border:1px solid #000;background-color:#13b4ff'>
-                AddList("Cor", $"Pode ser que a sequência seja uma cor: {_color}", true, "", 0, "", $"colorBox;{_color}");
+                string _color = _value;
+                if (!_color.StartsWith("#"))
+                    _color = $"#{_value}";
+
+                Regex regex = new Regex("^#(?:[0-9a-fA-F]{3}){1,2}$");
+
+                if (regex.Match(_color).Success)
+                {
+                    // <div class=\"boxColor\" style=\"background: #13b4ff\"></div>
+                    // <div style='width:10px;height:100px;border:1px solid #000;background-color:#13b4ff'>
+                    AddList("Cor", $"Pode ser que a sequência seja uma cor: {_color}", true, "", 0, "", $"colorBox;{_color}");
+                }
             }
+            catch { }
         }
 
         /// <summary>
@@ -385,41 +413,44 @@ namespace DSProject.Controllers
         /// </summary>
         private void LetterToNumber()
         {
-            string _onlyLetters = Utils.GetOnlyCharacteres(_value).Trim();
-
-            if (!string.IsNullOrEmpty(_onlyLetters))
+            try
             {
-                string _valueWithouSpaces = _value.Trim();
+                string _onlyLetters = Utils.GetOnlyCharacteres(_value).Trim();
 
-                string _AZOnlyLetter = Utils.GetNumbersFromLetterAZ(_onlyLetters, false);
-                string _AZNumbersLetter = Utils.GetNumbersFromLetterAZ(_valueWithouSpaces.Trim(), false);
-                string _ZAOnlyLetter = Utils.GetNumbersFromLetterZA(_onlyLetters, false);
-                string _ZANumbersLetter = Utils.GetNumbersFromLetterZA(_valueWithouSpaces.Trim(), false);
+                if (!string.IsNullOrEmpty(_onlyLetters))
+                {
+                    string _valueWithouSpaces = _value.Trim();
+
+                    string _AZOnlyLetter = Utils.GetNumbersFromLetterAZ(_onlyLetters, false);
+                    string _AZNumbersLetter = Utils.GetNumbersFromLetterAZ(_valueWithouSpaces.Trim(), false);
+                    string _ZAOnlyLetter = Utils.GetNumbersFromLetterZA(_onlyLetters, false);
+                    string _ZANumbersLetter = Utils.GetNumbersFromLetterZA(_valueWithouSpaces.Trim(), false);
 
 
-                if (string.IsNullOrEmpty(_AZOnlyLetter))
-                    AddList("Letras para números (A -> Z) (Não considera os números na palavra)", " - ", false, "", 0, "", "");
+                    if (string.IsNullOrEmpty(_AZOnlyLetter))
+                        AddList("Letras para números (A -> Z) (Não considera os números na palavra)", " - ", false, "", 0, "", "");
+                    else
+                        AddList("Letras para números (A -> Z) (Não considera os números na palavra)", _AZOnlyLetter, true, "", _onlyLetters.Length, "", "");
+
+                    if (string.IsNullOrEmpty(_AZNumbersLetter))
+                        AddList("Letras para números (A -> Z) (Considerando números na palavra)", " - ", false, "", 0, "", "");
+                    else
+                        AddList("Letras para números (A -> Z) (Considerando números na palavra)", _AZNumbersLetter, true, "", _valueWithouSpaces.Length, "", "");
+
+                    if (string.IsNullOrEmpty(_ZAOnlyLetter))
+                        AddList("Letras para números (Z -> A) (Não considera os números na palavra)", " - ", false, "", 0, "", "");
+                    else
+                        AddList("Letras para números (Z -> A) (Não considera os números na palavra)", _ZAOnlyLetter, true, "", _onlyLetters.Length, "", "");
+
+                    if (string.IsNullOrEmpty(_AZNumbersLetter))
+                        AddList("Letras para números (Z -> A) (Considerando números na palavra)", " - ", false, "", 0, "", "");
+                    else
+                        AddList("Letras para números (Z -> A) (Considerando números na palavra)", _ZANumbersLetter, true, "", _valueWithouSpaces.Length, "", "");
+                }
                 else
-                    AddList("Letras para números (A -> Z) (Não considera os números na palavra)", _AZOnlyLetter, true, "", _onlyLetters.Length, "", "");
-
-                if (string.IsNullOrEmpty(_AZNumbersLetter))
-                    AddList("Letras para números (A -> Z) (Considerando números na palavra)", " - ", false, "", 0, "", "");
-                else
-                    AddList("Letras para números (A -> Z) (Considerando números na palavra)", _AZNumbersLetter, true, "", _valueWithouSpaces.Length, "", "");
-
-                if (string.IsNullOrEmpty(_ZAOnlyLetter))
-                    AddList("Letras para números (Z -> A) (Não considera os números na palavra)", " - ", false, "", 0, "", "");
-                else
-                    AddList("Letras para números (Z -> A) (Não considera os números na palavra)", _ZAOnlyLetter, true, "", _onlyLetters.Length, "", "");
-
-                if (string.IsNullOrEmpty(_AZNumbersLetter))
-                    AddList("Letras para números (Z -> A) (Considerando números na palavra)", " - ", false, "", 0, "", "");
-                else
-                    AddList("Letras para números (Z -> A) (Considerando números na palavra)", _ZANumbersLetter, true, "", _valueWithouSpaces.Length, "", "");
+                    AddList("Letras para números ", " - ", false, "", 0, "", "");
             }
-            else
-                AddList("Letras para números ", " - ", false, "", 0, "", "");
-
+            catch { }
         }
 
         /// <summary>
@@ -427,42 +458,46 @@ namespace DSProject.Controllers
         /// </summary>
         private void NumberToLetter()
         {
-            string _onlyNumbers = Utils.GetOnlyNumbers(_value);
-            string[] _withSpace = null;
-
-            if (_value.Contains(" "))
-                _withSpace = _value.Split(" ");
-
-            if (!string.IsNullOrEmpty(_onlyNumbers))
+            try
             {
-                if (_withSpace == null || _withSpace.Length == 0)//Se não for informado com espaço considera número por número
-                {
-                    AddList("Números para letras (A -> Z) (Não considera letras na palavra)", Utils.GetLettersFromNumberAZ(_onlyNumbers, false), true, "", _onlyNumbers.Length, "", "");
-                    AddList("Números para letras (A -> Z) (Considerando letras na palavra)", Utils.GetLettersFromNumberAZ(_value, false), true, "", _value.Length, "", "");
-                    AddList("Números para letras (Z -> A) (Não considera letras na palavra)", Utils.GetLettersFromNumberZA(_onlyNumbers, false), true, "", _onlyNumbers.Length, "", "");
-                    AddList("Números para letras (Z -> A) (Considerando letras na palavra)", Utils.GetLettersFromNumberZA(_value, false), true, "", _value.Length, "", "");
-                }
-                else
-                {
-                    StringBuilder _AZWithoutLetters = new StringBuilder();
-                    StringBuilder _AZWithLetters = new StringBuilder();
-                    StringBuilder _ZAWithoutLetters = new StringBuilder();
-                    StringBuilder _ZAWithLetters = new StringBuilder();
+                string _onlyNumbers = Utils.GetOnlyNumbers(_value);
+                string[] _withSpace = null;
 
-                    foreach (string item in _withSpace)
+                if (_value.Contains(" "))
+                    _withSpace = _value.Split(" ");
+
+                if (!string.IsNullOrEmpty(_onlyNumbers))
+                {
+                    if (_withSpace == null || _withSpace.Length == 0)//Se não for informado com espaço considera número por número
                     {
-                        _AZWithoutLetters.Append(Utils.GetLettersFromNumberAZ(item, true));
-                        _AZWithLetters.Append(Utils.GetLettersFromNumberAZ(item, true));
-                        _ZAWithoutLetters.Append(Utils.GetLettersFromNumberZA(item, true));
-                        _ZAWithLetters.Append(Utils.GetLettersFromNumberZA(item, true));
+                        AddList("Números para letras (A -> Z) (Não considera letras na palavra)", Utils.GetLettersFromNumberAZ(_onlyNumbers, false), true, "", _onlyNumbers.Length, "", "");
+                        AddList("Números para letras (A -> Z) (Considerando letras na palavra)", Utils.GetLettersFromNumberAZ(_value, false), true, "", _value.Length, "", "");
+                        AddList("Números para letras (Z -> A) (Não considera letras na palavra)", Utils.GetLettersFromNumberZA(_onlyNumbers, false), true, "", _onlyNumbers.Length, "", "");
+                        AddList("Números para letras (Z -> A) (Considerando letras na palavra)", Utils.GetLettersFromNumberZA(_value, false), true, "", _value.Length, "", "");
                     }
+                    else
+                    {
+                        StringBuilder _AZWithoutLetters = new StringBuilder();
+                        StringBuilder _AZWithLetters = new StringBuilder();
+                        StringBuilder _ZAWithoutLetters = new StringBuilder();
+                        StringBuilder _ZAWithLetters = new StringBuilder();
 
-                    AddList("Números para letras (A -> Z) (Não considera letras na palavra)", _AZWithoutLetters.ToString(), true, "", _AZWithoutLetters.Length, "", "");
-                    AddList("Números para letras (A -> Z) (Considerando letras na palavra)", _AZWithLetters.ToString(), true, "", _AZWithLetters.Length, "", "");
-                    AddList("Números para letras (Z -> A) (Não considera letras na palavra)", _ZAWithoutLetters.ToString(), true, "", _ZAWithoutLetters.Length, "", "");
-                    AddList("Números para letras (Z -> A) (Considerando letras na palavra)", _ZAWithoutLetters.ToString(), true, "", _ZAWithoutLetters.Length, "", "");
+                        foreach (string item in _withSpace)
+                        {
+                            _AZWithoutLetters.Append(Utils.GetLettersFromNumberAZ(item, true));
+                            _AZWithLetters.Append(Utils.GetLettersFromNumberAZ(item, true));
+                            _ZAWithoutLetters.Append(Utils.GetLettersFromNumberZA(item, true));
+                            _ZAWithLetters.Append(Utils.GetLettersFromNumberZA(item, true));
+                        }
+
+                        AddList("Números para letras (A -> Z) (Não considera letras na palavra)", _AZWithoutLetters.ToString(), true, "", _AZWithoutLetters.Length, "", "");
+                        AddList("Números para letras (A -> Z) (Considerando letras na palavra)", _AZWithLetters.ToString(), true, "", _AZWithLetters.Length, "", "");
+                        AddList("Números para letras (Z -> A) (Não considera letras na palavra)", _ZAWithoutLetters.ToString(), true, "", _ZAWithoutLetters.Length, "", "");
+                        AddList("Números para letras (Z -> A) (Considerando letras na palavra)", _ZAWithoutLetters.ToString(), true, "", _ZAWithoutLetters.Length, "", "");
+                    }
                 }
             }
+            catch { }
         }
 
         /// <summary>
@@ -470,53 +505,57 @@ namespace DSProject.Controllers
         /// </summary>
         private void Cep()
         {
-            string _cep = Utils.RemoveMask(_value);
-
-            if (_cep.Length == 8)
+            try
             {
-                List<Integrant> _integrants = _context.Integrants.Where(integrant => !string.IsNullOrWhiteSpace(integrant.AdressCep) &&
-                                                                                     Utils.RemoveMask(integrant.AdressCep).Equals(_cep))
-                                                                 .ToList();
+                string _cep = Utils.RemoveMask(_value);
 
-                if (_integrants != null && _integrants.Count > 0)
+                if (_cep.Length == 8)
                 {
-                    if (_integrants.Count > 1)
-                    {
-                        string _integrantsNames = string.Join(", ", _integrants.Select(x => x.Name));
+                    List<Integrant> _integrants = _context.Integrants.Where(integrant => !string.IsNullOrWhiteSpace(integrant.AdressCep) &&
+                                                                                         Utils.RemoveMask(integrant.AdressCep).Equals(_cep))
+                                                                     .ToList();
 
-                        AddList("CEP", $"Os integrantes da Dark Side {_integrantsNames} possuem este CEP", true, Utils.GetMask(eMaskType.cep), 8, "", "");
+                    if (_integrants != null && _integrants.Count > 0)
+                    {
+                        if (_integrants.Count > 1)
+                        {
+                            string _integrantsNames = string.Join(", ", _integrants.Select(x => x.Name));
+
+                            AddList("CEP", $"Os integrantes da Dark Side {_integrantsNames} possuem este CEP", true, Utils.GetMask(eMaskType.cep), 8, "", "");
+                        }
+                        else
+                        {
+                            AddList("CEP", $"O(A) integrante da Dark Side {_integrants.FirstOrDefault().Name} possui este CEP", true, Utils.GetMask(eMaskType.cep), 8, "", "");
+                        }
+
                     }
                     else
                     {
-                        AddList("CEP", $"O(A) integrante da Dark Side {_integrants.FirstOrDefault().Name} possui este CEP", true, Utils.GetMask(eMaskType.cep), 8, "", "");
-                    }
+                        Adress _adress = WebServiceCEP.Instance.SearchCep(_cep);
 
+                        if (_adress != null && !_adress.erro)
+                        {
+                            StringBuilder _sbAdressInfo = new StringBuilder();
+
+                            _sbAdressInfo.AppendLine($"<br><strong>Endereço: {_adress.logradouro} </strong>");
+                            _sbAdressInfo.AppendLine($"<br><strong>Bairro: {_adress.bairro} </strong>");
+                            _sbAdressInfo.AppendLine($"<br><strong>Complemento: {_adress.complemento} </strong>");
+                            _sbAdressInfo.AppendLine($"<br><strong>Cidade: {_adress.localidade} </strong>");
+                            _sbAdressInfo.AppendLine($"<br><strong>IBGE: {_adress.ibge} </strong>");
+                            _sbAdressInfo.AppendLine($"<br><strong>Estado: {_adress.uf} </strong>");
+
+                            AddList("CEP", $"Foi encontrado um CEP no site dos correios. Verifique ao lado ", true, Utils.GetMask(eMaskType.cep), 0, "", _sbAdressInfo.ToString());
+                        }
+                        else
+                            AddList("CEP", $"Pode ser que o valor seja um CEP: {Utils.PutCepMask(_cep)}", true, Utils.GetMask(eMaskType.cep), 0, "", "");
+                    }
                 }
                 else
                 {
-                    Adress _adress = WebServiceCEP.Instance.SearchCep(_cep);
-
-                    if (_adress != null && !_adress.erro)
-                    {
-                        StringBuilder _sbAdressInfo = new StringBuilder();
-
-                        _sbAdressInfo.AppendLine($"<br><strong>Endereço: {_adress.logradouro} </strong>");
-                        _sbAdressInfo.AppendLine($"<br><strong>Bairro: {_adress.bairro} </strong>");
-                        _sbAdressInfo.AppendLine($"<br><strong>Complemento: {_adress.complemento} </strong>");
-                        _sbAdressInfo.AppendLine($"<br><strong>Cidade: {_adress.localidade} </strong>");
-                        _sbAdressInfo.AppendLine($"<br><strong>IBGE: {_adress.ibge} </strong>");
-                        _sbAdressInfo.AppendLine($"<br><strong>Estado: {_adress.uf} </strong>");
-
-                        AddList("CEP", $"Foi encontrado um CEP no site dos correios. Verifique ao lado ", true, Utils.GetMask(eMaskType.cep), 0, "", _sbAdressInfo.ToString());
-                    }
-                    else
-                        AddList("CEP", $"Pode ser que o valor seja um CEP: {Utils.PutCepMask(_cep)}", true, Utils.GetMask(eMaskType.cep), 0, "", "");
+                    AddList("CEP", "Não é um CEP válido. Um CEP contém 8 caracteres", false, Utils.GetMask(eMaskType.cep), _cep.Length, "", "");
                 }
             }
-            else
-            {
-                AddList("CEP", "Não é um CEP válido. Um CEP contém 8 caracteres", false, Utils.GetMask(eMaskType.cep), _cep.Length, "", "");
-            }
+            catch { }
         }
 
         /// <summary>
@@ -524,26 +563,58 @@ namespace DSProject.Controllers
         /// </summary>
         private void CaesarCipher()
         {
-            int _movement = _cifraCesar.ToInt32();
-            if (_movement > 0)
+            try
             {
-                string _lowerValue = _value.ToLower();
-                string _encrypt = string.Empty;
-
-                for (int i = 0; i < _lowerValue.Length; i++)
+                int _movement = _cifraCesar.ToInt32();
+                if (_movement > 0)
                 {
-                    int ASCII = (int)_lowerValue[i];
+                    string _lowerValue = _value.ToLower();
+                    string _encrypt = string.Empty;
 
-                    //Coloca a chave fixa adicionando X posições no numero da tabela ASCII
-                    int ASCIIC = ASCII + _movement;
+                    for (int i = 0; i < _lowerValue.Length; i++)
+                    {
+                        int ASCII = (int)_lowerValue[i];
 
-                    _encrypt += Char.ConvertFromUtf32(ASCIIC);
+                        //Coloca a chave fixa adicionando X posições no numero da tabela ASCII
+                        int ASCIIC = ASCII + _movement;
+
+                        _encrypt += Char.ConvertFromUtf32(ASCIIC);
+                    }
+
+                    if (!string.IsNullOrEmpty(_encrypt))
+                        AddList("Cifra de César", _encrypt, true, "", _encrypt.Length, "", "");
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Converte um sequência de binários em texto
+        /// </summary>
+        private void BinaryToString()
+        {
+            try
+            {
+                Encoding enc = System.Text.Encoding.UTF8;
+
+                string binaryString = _value.Replace(" ", "");
+
+                var bytes = new byte[binaryString.Length / 8];
+
+                var ilen = (int)(binaryString.Length / 8);
+
+                for (var i = 0; i < ilen; i++)
+                {
+                    bytes[i] = Convert.ToByte(binaryString.Substring(i * 8, 8), 2);
                 }
 
-                if (!string.IsNullOrEmpty(_encrypt))
-                    AddList("Cifra de César", _encrypt, true, "", _encrypt.Length, "", "");
+                string str = enc.GetString(bytes);
+
+                AddList("Binário para letra", str, false);
             }
+            catch { }
         }
+
 
         #endregion
     }
