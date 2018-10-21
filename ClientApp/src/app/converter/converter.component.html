@@ -27,8 +27,8 @@
 <table class="table results">
   <tr>
     <td>Descrição</td>
-    <td>Padrão</td>
-    <td>Tamanho</td>
+    <!-- <td>Padrão</td>
+    <td>Tamanho</td> -->
     <td>Resultado</td>
     <td>Link</td>
     <!-- <td>IsMatch</td> -->
@@ -36,8 +36,8 @@
   </tr>
   <tr *ngFor="let function of functions" [ngStyle]="function.isMatch && {'background-color':'#90EE90'}">
     <td>{{function.description}}</td>
-    <td>{{function.pattern}}</td>
-    <td>{{function.size}}</td>
+    <!-- <td>{{function.pattern}}</td> -->
+    <!-- <td>{{function.size}}</td> -->
     <td>{{function.result}}</td>
     <td *ngIf="function.link; else emptyLink"><a href="{{function.link}}" target="_blank">ACESSE AQUI</a></td>
     <ng-template #emptyLink>

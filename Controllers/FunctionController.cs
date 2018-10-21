@@ -102,6 +102,7 @@ namespace DSProject.Controllers
             Cep();
             CaesarCipher();
             BinaryToString();
+            MorseToText();
 
             return _lstFunctions;
         }
@@ -611,6 +612,81 @@ namespace DSProject.Controllers
                 string str = enc.GetString(bytes);
 
                 AddList("Binário para letra", str, false);
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Coverte código morse para texto
+        /// </summary>
+        private void MorseToText()
+        {
+            try
+            {
+                Dictionary<char, string> morseToChar = new Dictionary<char, string>()
+                {
+                    {'a', ".-"},
+                    {'b', "-..."},
+                    {'c', "-.-."},
+                    {'d', "-.."},
+                    {'e', "."},
+                    {'f', "..-."},
+                    {'g', "--."},
+                    {'h', "...."},
+                    {'i', ".."},
+                    {'j', ".---"},
+                    {'k', "-.-"},
+                    {'l', ".-.."},
+                    {'m', "--"},
+                    {'n', "-."},
+                    {'o', "---"},
+                    {'p', ".--."},
+                    {'q', "--.-"},
+                    {'r', ".-."},
+                    {'s', "..."},
+                    {'t', "-"},
+                    {'u', "..-"},
+                    {'v', "...-"},
+                    {'w', ".--"},
+                    {'x', "-..-"},
+                    {'y', "-.--"},
+                    {'z', "--.."},
+
+                    {'0', "-----"},
+                    {'1', ".----"},
+                    {'2', "..---"},
+                    {'3', "...--"},
+                    {'4', "....-"},
+                    {'5', "....."},
+                    {'6', "-...."},
+                    {'7', "--..."},
+                    {'8', "---.."},
+                    {'9', "----."},
+
+                    {' ', "/"},
+                    {'.', ".-.-.-"},
+                    {',', "--..--"},
+                    {':', "---..."},
+                    {'?', "..--.."},
+                    {'!', "..--."},
+                    {'\'', ".----."},
+                    {'-', "-....-"},
+                    {'/', "-..-."},
+                    {'"', ".-..-."},
+                    {'@', ".--.-."},
+                    {'=', "-...-"}
+                };
+
+                string[] input = _value.ToLower().Trim().Split(' ');
+                StringBuilder output = new StringBuilder();
+                foreach (string s in input)
+                {
+                    if (morseToChar.ContainsValue(s))
+                        output.Append(morseToChar.FirstOrDefault(x => x.Value == s).Key);
+                }
+
+                if (!string.IsNullOrEmpty(output.ToString()))
+                    AddList("Morse para texto", output.ToString(), true, "", output.Length, "", "");
             }
             catch { }
         }
