@@ -663,7 +663,7 @@ namespace DSProject.Controllers
                     {'8', "---.."},
                     {'9', "----."},
 
-                    {' ', "/"},
+                    {' ', "__"},//O correto seria a "/", porém ao enviar por parâmetro a API considera como um caminho. Para tal foi substituída por __.
                     {'.', ".-.-.-"},
                     {',', "--..--"},
                     {':', "---..."},
@@ -682,7 +682,12 @@ namespace DSProject.Controllers
                 foreach (string s in input)
                 {
                     if (morseToChar.ContainsValue(s))
+                    {
                         output.Append(morseToChar.FirstOrDefault(x => x.Value == s).Key);
+
+                        if(s.Equals("__"))
+                            output.Append(" ");
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(output.ToString()))
