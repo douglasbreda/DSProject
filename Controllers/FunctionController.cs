@@ -94,6 +94,7 @@ namespace DSProject.Controllers
             Cpf();
             Cnpj();
             DataCheck();
+            DataCheckInverted();
             Phone();
             CellPhone();
             CheckColor();
@@ -194,7 +195,7 @@ namespace DSProject.Controllers
         }
 
         /// <summary>
-        /// 
+        ///  Verificação de data no padrão dd/MM/yyyy
         /// </summary>
         private void DataCheck()
         {
@@ -224,6 +225,36 @@ namespace DSProject.Controllers
                     catch
                     {
                         AddList("Data", $"Não é uma data válida", false, Utils.GetMask(eMaskType.data), 8);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        ///  Verificação de data no formato yyyy/MM/dd
+        /// </summary>
+        private void DataCheckInverted()
+        {
+            try
+            {
+                string _date = Utils.GetOnlyNumbers(_value);
+
+
+
+                if (_date.Length == 8)
+                {
+                    int year = _date.Substring(0, 4).ToInt32();
+                    int month = _date.Substring(4, 2).ToInt32();
+                    int day = _date.Substring(6, 2).ToInt32();
+
+                    DateTime dt = new DateTime(year, month, day);
+
+                    if (dt != new DateTime())
+                    {
+                        CultureInfo cult = new CultureInfo("pt-BR");
+                        string dtFormated = dt.ToString("yyyy/MM/dd", cult);
+                        AddList("Data", $"Pode ser que o valor seja uma data no padrão: {dtFormated}", true, Utils.GetMask(eMaskType.data), 8);
                     }
                 }
             }
@@ -685,7 +716,7 @@ namespace DSProject.Controllers
                     {
                         output.Append(morseToChar.FirstOrDefault(x => x.Value == s).Key);
 
-                        if(s.Equals("__"))
+                        if (s.Equals("__"))
                             output.Append(" ");
                     }
                 }
