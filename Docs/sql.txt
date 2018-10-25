@@ -1,0 +1,18 @@
+--DELETE FROM Sports
+--DELETE FROM Language
+--DELETE FROM Knowledge
+--DELETE FROM InstrumentPlayed
+--DELETE FROM Instrument
+--DELETE FROM Device
+--DELETE FROM Ability
+--DELETE FROM Integrant
+
+
+--DBCC CHECKIDENT ('Sports', RESEED, 0);  
+--DBCC CHECKIDENT ('Language', RESEED, 0);  
+--DBCC CHECKIDENT ('Knowledge', RESEED, 0);  
+--DBCC CHECKIDENT ('InstrumentPlayed', RESEED, 0);  
+--DBCC CHECKIDENT ('Instrument', RESEED, 0);  
+--DBCC CHECKIDENT ('Device', RESEED, 0);  
+--DBCC CHECKIDENT ('Ability', RESEED, 0);  
+--DBCC CHECKIDENT ('Integrant', RESEED, 0); 

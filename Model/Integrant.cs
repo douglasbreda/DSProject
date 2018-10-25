@@ -252,6 +252,36 @@ namespace DSProject.Model
         /// </summary>
         public string SomethingMore { get; set; }
 
+        /// <summary>
+        /// Telefone de emergência
+        /// </summary>
+        public string EmergencyPhone { get; set; }
+
+        /// <summary>
+        /// Tipo sanguíneo
+        /// </summary>
+        public string BloodType { get; set; }
+
+        /// <summary>
+        /// Tamanho da camiseta
+        /// </summary>
+        public string ShirtSize { get; set; }
+
+        /// <summary>
+        /// Restrições alimentares
+        /// </summary>
+        public string FoodRestriction { get; set; }
+
+        /// <summary>
+        /// De quais outras gincanas participou?
+        /// </summary>
+        public string ChallengesYouParticipated { get; set; }
+
+        /// <summary>
+        /// Prefere ficar na rua, no QG ou tanto faz
+        /// </summary>
+        public string Preference { get; set; }
+
         #endregion
     }
 }

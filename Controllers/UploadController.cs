@@ -120,16 +120,20 @@ namespace DSProject.Controllers
         {
             EntityFactory _entityFactory = new EntityFactory();
 
-            integrantInstance.RegistrationDate = dataLine["Carimbo de data/hora"].ToDateTime();
+            integrantInstance.RegistrationDate = dataLine["Timestamp"].ToDateTime();
+            integrantInstance.Email = dataLine["Username"].ToString();
             integrantInstance.Name = dataLine["Nome Completo"].ToString();
             integrantInstance.RG = dataLine["RG"].ToString();
             integrantInstance.CPF = Utils.PutCpfMask(dataLine["CPF"].ToString());
             integrantInstance.Phone = dataLine["Telefone"].ToString();
             integrantInstance.CellPhone = dataLine["Celular"].ToString();
-            integrantInstance.Email = dataLine["E-mail"].ToString();
+            integrantInstance.EmergencyPhone = dataLine["Telefone de emergência"].ToString();
             integrantInstance.DateOfBirth = dataLine["Data de Nascimento"].ToDateTime();
             integrantInstance.HourOfBirth = dataLine["Horário de Nascimento"].ToString();
-            integrantInstance.BirthPlace = dataLine["Local de Nascimento"].ToString();
+            integrantInstance.BirthPlace = dataLine["Cidade de Nascimento"].ToString();
+            integrantInstance.BloodType = dataLine["Tipo Sanguineo"].ToString();
+            integrantInstance.ShirtSize = dataLine["Tamanho da Camiseta"].ToString();
+            integrantInstance.FoodRestriction = dataLine["Restrições Alimentares / Alergias (avisa que a gente não quer matar ninguém) "].ToString();
             integrantInstance.Sign = dataLine["Signo "].ToString();
             integrantInstance.IsVoluntary = Utils.ToBoolean(dataLine["Deseja ser voluntário para ações sociais"]);
             integrantInstance.Adress = dataLine["Logradouro"].ToString();
@@ -138,8 +142,10 @@ namespace DSProject.Controllers
             integrantInstance.AdressCity = dataLine["Cidade"].ToString();
             integrantInstance.AdressState = dataLine["Estado"].ToString();
             integrantInstance.AdressCep = dataLine["CEP"].ToString();
-            integrantInstance.NumberOfParticipations = dataLine["Quantas vezes já participou da gincana ?"].ToInt32();
-            integrantInstance.IsUseCarPlotting = Utils.ToBoolean(dataLine["Irá inscrever o veículo para plotagem"].ToString(), "Sim");
+            integrantInstance.NumberOfParticipations = dataLine["Quantas vezes já participou do Itajaí Challenge?"].ToInt32();
+            integrantInstance.ChallengesYouParticipated = dataLine["De quais outras gincanas participou?"].ToString();
+            integrantInstance.Preference = dataLine["Na gincana você prefere:"].ToString();
+            // integrantInstance.IsUseCarPlotting = Utils.ToBoolean(dataLine["Irá inscrever o veículo para plotagem"].ToString(), "Sim");
             integrantInstance.IsUseCarTests = Utils.ToBoolean(dataLine["Irá inscrever o veículo para provas"].ToString(), "Sim");
             integrantInstance.CarBrand = dataLine["Marca"].ToString();
             integrantInstance.CarModel = dataLine["Modelo"].ToString();
@@ -159,8 +165,8 @@ namespace DSProject.Controllers
             integrantInstance.Devices = _entityFactory.CreateDevices(dataLine["Possui ( disponível para ser utilizado na gincana ) "].ToString());
             integrantInstance.Abilities = _entityFactory.CreateAbilities(dataLine["Habilidades "].ToString());
             integrantInstance.Sports = _entityFactory.CreateSports(dataLine["Esportes que pratica"].ToString());
-            integrantInstance.Instruments = _entityFactory.CreateInstruments(dataLine["Instrumentos musicais"].ToString());
-            integrantInstance.InstrumentPlayed = _entityFactory.CreateInstrumentsPlayed(dataLine["Quais instrumentos musicais você toca??"].ToString());
+            // integrantInstance.Instruments = _entityFactory.CreateInstruments(dataLine["Instrumentos musicais"].ToString());
+            integrantInstance.InstrumentPlayed = _entityFactory.CreateInstrumentsPlayed(dataLine["Quais instrumentos musicais você toca?"].ToString());
             integrantInstance.Languages = _entityFactory.CreateLanguages(dataLine["Idiomas"].ToString());
             integrantInstance.Knowledges = _entityFactory.CreateKnowledges(dataLine["Área de conhecimento que se sente confortável"].ToString());
             integrantInstance.AdvancedKnowledge = dataLine["Tem conhecimento avançado em algum assunto? Qual?"].ToString();

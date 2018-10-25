@@ -33,6 +33,7 @@ export class IntegrantComponent {
     });
 
     this.http.request(uploadReq).subscribe(event => {
+      console.log(event.type);
       if (event.type == HttpEventType.UploadProgress)
         this.progress = Math.round(100 * event.loaded / event.total);
       else if (event.type == HttpEventType.Response)

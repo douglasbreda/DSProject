@@ -4,14 +4,16 @@ using DSProject.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DSProject.Migrations
 {
     [DbContext(typeof(DSBaseContext))]
-    partial class DSBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20181025005535_updateFields")]
+    partial class updateFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
