@@ -104,6 +104,7 @@ namespace DSProject.Controllers
             CaesarCipher();
             BinaryToString();
             MorseToText();
+            NfeKey();
 
             return _lstFunctions;
         }
@@ -193,6 +194,18 @@ namespace DSProject.Controllers
             }
             catch { }
         }
+
+        /// <summary>
+        /// Verifica se a sequência pode ser uma chave de NFe
+        /// </summary>
+        private void NfeKey(){
+
+            string _nfe = Utils.GetOnlyNumbers(_value);
+
+            if(_nfe.Length == 44)
+                AddList("Nota Fiscal (NFe)", "Pode ser que o valor seja uma nota fiscal eletrônica. Acesse o link ao lado ou tente os disponíveis na aba de links úteis ", true, "", 0, "http://www.nfe.fazenda.gov.br/portal/consultaRecaptcha.aspx?tipoConsulta=completa&tipoConteudo=XbSeqxE8pl8=");
+        }
+
 
         /// <summary>
         ///  Verificação de data no padrão dd/MM/yyyy
