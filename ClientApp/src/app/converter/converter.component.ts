@@ -23,10 +23,14 @@ export class ConverterComponent implements OnInit {
      * Retorna todas as funções que foram realizadas pela API
      */
     private getFunctions() {
-        this.functionService.getFunctions(this.textValue.value.toString().replace("/", "__"), this.textCifraCesar.value.toString()).subscribe((data: Array<IFunction>) => {
-            this.functions = data;
-            console.log(data);
-        });
+        let userValue: string = this.textValue.value.toString().replace("/", "__");
+
+        if (userValue.length > 0) {
+            this.functionService.getFunctions(userValue, this.textCifraCesar.value.toString()).subscribe((data: Array<IFunction>) => {
+                this.functions = data;
+            });
+        }else
+            alert('Não foi informado nenhum valor.')
     }
 
     ngOnInit(): void {
@@ -50,7 +54,7 @@ export class ConverterComponent implements OnInit {
     private getTag(key: string, value: string) {
         switch (key) {
             case "colorBox":
-                 return this._sanitizer.bypassSecurityTrustHtml( "<div style=\"width:30px;height:30px;border:1px solid #000;background-color:" + value + "\">");
+                return this._sanitizer.bypassSecurityTrustHtml("<div style=\"width:30px;height:30px;border:1px solid #000;background-color:" + value + "\">");
             default:
                 return this._sanitizer.bypassSecurityTrustHtml(key);
         }
